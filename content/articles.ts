@@ -181,8 +181,48 @@ export const articles: Article[] = [
       },
     ],
   },
+  {
+    slug: "shoulder-rotator-cuff",
+    date: "2026-05-15",
+    readMinutes: 5,
+    image: media.xray,
+    category: { ar: "الكتف", en: "Shoulder" },
+    title: { ar: "تمزق أوتار الكتف: متى نعالج ومتى نجري جراحة؟", en: "Rotator Cuff Tears: When to Treat, When to Operate" },
+    excerpt: {
+      ar: "ألم الكتف الليلي وضعف رفع الذراع قد يكونان علامة على إصابة أوتار الكتف.",
+      en: "Night-time shoulder pain and weakness lifting the arm can signal a rotator cuff injury.",
+    },
+    body: [
+      {
+        type: "p",
+        text: {
+          ar: "أوتار الكتف مجموعة من أربعة أوتار تثبّت مفصل الكتف وتحرّكه. تتعرض للإجهاد مع التقدم في العمر أو الحركات المتكررة فوق مستوى الرأس، أو لإصابة مفاجئة أثناء الرياضة.",
+          en: "The rotator cuff is a group of four tendons that stabilise and move the shoulder. It wears with age or repetitive overhead movement, or tears suddenly during sport.",
+        },
+      },
+      { type: "h2", text: { ar: "العلامات الشائعة", en: "Common signs" } },
+      {
+        type: "list",
+        items: {
+          ar: ["ألم يزداد ليلًا عند النوم على الكتف", "صعوبة في رفع الذراع أو تمشيط الشعر", "ضعف ملحوظ في قوة الكتف", "صوت طقطقة مع الحركة"],
+          en: ["Pain that worsens at night when lying on the shoulder", "Difficulty raising the arm or brushing hair", "Noticeable weakness", "Clicking with movement"],
+        },
+      },
+      { type: "h2", text: { ar: "خيارات العلاج", en: "Treatment options" } },
+      {
+        type: "p",
+        text: {
+          ar: "التمزقات الجزئية تستجيب غالبًا للعلاج الطبيعي والحقن الموجّهة. أما التمزقات الكاملة لدى الشباب والرياضيين فيُفضَّل إصلاحها مبكرًا بالمنظار لاستعادة القوة الكاملة.",
+          en: "Partial tears often respond to physiotherapy and guided injections. Complete tears in young people and athletes are best repaired early by arthroscopy to restore full strength.",
+        },
+      },
+      {
+        type: "quote",
+        text: {
+          ar: "التشخيص المبكر لأوتار الكتف يصنع الفرق بين علاج بسيط وجراحة معقدة.",
+          en: "Early diagnosis of a rotator cuff injury is the difference between simple treatment and complex surgery.",
+        },
+      },
+    ],
+  },
 ];
-
-export function getArticle(slug: string): Article | undefined {
-  return articles.find((article) => article.slug === slug);
-}

@@ -101,7 +101,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           whatsappHref={whatsappLink(dict.cta.whatsappMessage)}
         />
         <main id="main">{children}</main>
-        <CTA locale={locale} labels={dict.cta} />
+        <CTA locale={locale} labels={dict.cta} doctor={{ name: tr(site.name, locale), role: dict.intro.cardRole }} />
         <Footer locale={locale} dict={dict} />
         <Interactions />
         <JsonLd data={physicianSchema(locale)} />

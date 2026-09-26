@@ -8,7 +8,7 @@ import { media } from "@/content/media";
 import { services, treatments } from "@/content/services";
 import { site, whatsappLink } from "@/content/site";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { PageHero } from "@/components/sections/PageHero";
+import { Hero } from "@/components/sections/Hero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Aurora } from "@/components/ui/Aurora";
 import { GlassButton } from "@/components/ui/GlassButton";
@@ -47,17 +47,26 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
 
   return (
     <>
-      <PageHero locale={locale} common={dict.common} title={t.title} subtitle={t.subtitle} image={media.reception} />
+      <Hero
+        locale={locale}
+        labels={dict.hero}
+        size="page"
+        eyebrow={dict.contactPage.eyebrow}
+        line1={dict.contactPage.title}
+        line2={dict.contactPage.subtitle}
+        image={media.reception}
+        breadcrumb={{ label: dict.common.breadcrumb, homeLabel: dict.common.home, current: dict.contactPage.title }}
+      />
 
       <section aria-labelledby="booking-title" className="section-y relative isolate">
         <Aurora className="-start-60 top-0" />
         <Aurora className="-end-60 bottom-0" variant="deep" />
 
-        <div className="container-lux grid gap-8 lg:grid-cols-[1fr_1.35fr] lg:gap-10">
+        <div className="container-lux grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] lg:gap-10">
           {/* Contact details */}
           <div className="flex flex-col gap-4">
             <h2 className="sr-only">{t.infoTitle}</h2>
-            <ul className="grid gap-4">
+            <ul className="grid grid-cols-1 gap-4">
               {channels.map((channel, i) => {
                 const body = (
                   <>

@@ -88,12 +88,24 @@ export type Article = {
   body: ArticleBlock[];
 };
 
-export type Credential = {
+/** Anything shown as a card that opens a detail modal (technologies, specialties). */
+export type DetailItem = {
+  id: string;
+  title: Localized;
+  summary: Localized;
+  details: Localized<string[]>;
+  highlights: Localized<string[]>;
+  image: string;
+  icon: IconName;
+};
+
+export type Certificate = {
   id: string;
   title: Localized;
   issuer: Localized;
   year: string;
-  icon: IconName;
+  /** Optional scan of the real certificate; a styled preview is drawn otherwise. */
+  image?: string;
 };
 
 export type Milestone = {
@@ -101,4 +113,13 @@ export type Milestone = {
   period: string;
   role: Localized;
   place: Localized;
+  text: Localized;
+  icon: IconName;
+};
+
+export type Achievement = {
+  id: string;
+  title: Localized;
+  text: Localized;
+  icon: IconName;
 };

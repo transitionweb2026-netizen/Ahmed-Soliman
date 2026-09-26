@@ -1,49 +1,99 @@
+import Image from "next/image";
 import type { Dictionary } from "@/lib/dictionary";
 import { localePath, type Locale } from "@/lib/i18n";
+import { media } from "@/content/media";
 import { whatsappLink } from "@/content/site";
 import { GlassButton } from "@/components/ui/GlassButton";
+import { Icon } from "@/components/ui/Icon";
 
 type CTAProps = {
   locale: Locale;
   labels: Dictionary["cta"];
+  doctor: { name: string; role: string };
 };
+
+/** Arched glass window with the doctor's portrait, layered depth and a floating name badge. */
+function Portrait({ name, role }: CTAProps["doctor"]) {
+  return (
+    <div className="group relative mx-auto h-[19rem] w-60 shrink-0 sm:h-[22rem] sm:w-72 lg:mx-0">
+      {/* Brand glow + precision rings */}
+      <div aria-hidden="true" className="absolute inset-6 -z-10 rounded-full bg-brand/40 blur-3xl" />
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 300 300"
+        className="absolute left-1/2 top-1/2 -z-10 h-[125%] w-[125%] -translate-x-1/2 -translate-y-1/2 text-brand/40 motion-safe:animate-[spin_60s_linear_infinite]"
+      >
+        <circle cx="150" cy="150" r="146" fill="none" stroke="currentColor" strokeDasharray="1 7" />
+        <circle cx="150" cy="150" r="128" fill="none" stroke="currentColor" strokeWidth="0.6" />
+        <circle cx="150" cy="4" r="3.5" fill="#8fd3d1" />
+      </svg>
+
+      {/* Offset ghost card behind the window */}
+      <div
+        aria-hidden="true"
+        className="card-back absolute inset-0 rounded-b-[2.5rem] rounded-t-[7.5rem] sm:rounded-t-[9rem] -rotate-[7deg] opacity-80 group-hover:-rotate-[11deg] group-hover:-translate-x-3"
+      />
+
+      {/* Arched glass window */}
+      <div data-tilt className="glass glass-interactive absolute inset-0 rounded-b-[2.5rem] rounded-t-[7.5rem] sm:rounded-t-[9rem] p-2">
+        <div className="relative h-full overflow-hidden rounded-b-[2.1rem] rounded-t-[7rem] shadow sm:rounded-t-[8.5rem]-[inset_0_0_0_1px_rgb(72_164_164/0.35)]">
+          <Image
+            src={media.doctorPortrait}
+            alt={name}
+            fill
+            sizes="(min-width: 640px) 288px, 240px"
+            className="object-cover object-top transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-brand-deep/80 via-transparent to-transparent" />
+          <div aria-hidden="true" className="absolute inset-2 rounded-b-[1.8rem] rounded-t-[6.5rem] border sm:rounded-t-[8rem] border-white/20" />
+        </div>
+      </div>
+
+      {/* Floating name badge */}
+      <div className="absolute -bottom-5 start-1/2 w-max -translate-x-1/2 motion-safe:animate-float rtl:translate-x-1/2">
+        <div className="glass glass-strong flex items-center gap-3 rounded-2xl py-2.5 pe-4 ps-2.5">
+          <span className="glass-chip h-9 w-9 rounded-xl">
+            <Icon name="shield" size={17} />
+          </span>
+          <span className="flex flex-col leading-tight">
+            <span className="text-sm font-semibold text-white">{name}</span>
+            <span className="text-[0.7rem] text-brand-light">{role}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * The single call-to-action card used at the end of every page.
  * Rendered once from the locale layout so it is identical everywhere.
  */
-export function CTA({ locale, labels }: CTAProps) {
+export function CTA({ locale, labels, doctor }: CTAProps) {
   return (
     <section aria-labelledby="cta-title" className="container-lux relative isolate pb-24 pt-8 lg:pb-32">
-      <div data-reveal="scale" className="glass glass-interactive relative overflow-hidden rounded-[2.5rem] px-6 py-14 sm:px-12 lg:px-20 lg:py-20" data-tilt>
+      <div data-reveal="scale" className="glass relative overflow-hidden rounded-[2.5rem] px-6 pb-14 pt-12 sm:px-12 lg:px-16 lg:py-16">
         {/* Brand light pooled inside the glass */}
-        <div aria-hidden="true" className="absolute -top-32 start-1/2 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-brand/30 blur-3xl rtl:translate-x-1/2" />
-        <div aria-hidden="true" className="absolute -bottom-40 -start-20 -z-10 h-96 w-96 rounded-full bg-brand-deep/80 blur-3xl" />
-        <div aria-hidden="true" className="absolute -end-24 top-1/2 -z-10 h-72 w-72 -translate-y-1/2 rounded-full bg-brand/20 blur-3xl" />
-        {/* Concentric rings — a quiet nod to precision */}
-        <svg aria-hidden="true" viewBox="0 0 400 400" className="absolute -end-28 -top-28 -z-10 h-[26rem] w-[26rem] text-brand/25 animate-[spin_90s_linear_infinite]">
-          <circle cx="200" cy="200" r="120" fill="none" stroke="currentColor" strokeDasharray="2 10" />
-          <circle cx="200" cy="200" r="160" fill="none" stroke="currentColor" strokeWidth="0.6" />
-          <circle cx="200" cy="200" r="196" fill="none" stroke="currentColor" strokeDasharray="1 6" />
-        </svg>
+        <div aria-hidden="true" className="absolute -top-32 start-10 -z-10 h-80 w-80 rounded-full bg-brand/30 blur-3xl" />
+        <div aria-hidden="true" className="absolute -bottom-40 end-0 -z-10 h-96 w-96 rounded-full bg-brand-deep/80 blur-3xl" />
 
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <span className="glass-chip h-14 w-14 rounded-2xl" aria-hidden="true">
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </span>
-          <h2 id="cta-title" className="text-gradient text-3xl leading-tight sm:text-4xl lg:text-5xl">
-            {labels.line1}
-          </h2>
-          <p className="max-w-xl text-base text-mist/75 sm:text-lg">{labels.line2}</p>
-          <div className="mt-3 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
-            <GlassButton href={whatsappLink(labels.whatsappMessage)} external size="lg" icon="whatsapp">
-              {labels.whatsapp}
-            </GlassButton>
-            <GlassButton href={localePath(locale, "/contact")} variant="glass" size="lg" arrow>
-              {labels.contact}
-            </GlassButton>
+        <div className="flex flex-col items-center gap-14 lg:flex-row lg:gap-16">
+          <Portrait {...doctor} />
+
+          <div className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-start">
+            <span className="eyebrow">{doctor.role}</span>
+            <h2 id="cta-title" className="text-gradient text-3xl leading-tight sm:text-4xl lg:text-5xl">
+              {labels.line1}
+            </h2>
+            <p className="max-w-xl text-base text-mist/75 sm:text-lg">{labels.line2}</p>
+            <div className="mt-3 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <GlassButton href={whatsappLink(labels.whatsappMessage)} external size="lg" icon="whatsapp">
+                {labels.whatsapp}
+              </GlassButton>
+              <GlassButton href={localePath(locale, "/contact")} variant="glass" size="lg" arrow>
+                {labels.contact}
+              </GlassButton>
+            </div>
           </div>
         </div>
       </div>

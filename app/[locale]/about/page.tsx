@@ -4,18 +4,23 @@ import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localePath, tr } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
-import { achievements, biography, credentials, expertise, milestones } from "@/content/about";
-import { stats } from "@/content/home";
+import { achievements, certificates, keyAreas, milestones, technologies } from "@/content/about";
 import { media } from "@/content/media";
 import { site } from "@/content/site";
+import { aboutVideo } from "@/content/videos";
+import type { DetailItem } from "@/content/types";
+import type { Locale } from "@/lib/i18n";
+import { DetailCard } from "@/components/cards/DetailCard";
+import { CareerTimeline } from "@/components/sections/CareerTimeline";
+import { Certificates } from "@/components/sections/Certificates";
 import { DoctorCard } from "@/components/sections/DoctorCard";
-import { PageHero } from "@/components/sections/PageHero";
-import { Statistics } from "@/components/sections/Statistics";
+import { Hero } from "@/components/sections/Hero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Aurora } from "@/components/ui/Aurora";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { VideoPlayer } from "@/components/video/VideoPlayer";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/about">): Promise<Metadata> {
   const { locale } = await params;
@@ -30,71 +35,134 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/about">)
   });
 }
 
+type CardSectionProps = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  items: DetailItem[];
+  locale: Locale;
+  labels: { learnMore: string; close: string; highlights: string };
+  auroraSide: "start" | "end";
+};
+
+/** Header + four cards that open detail modals (technologies, key areas). */
+function DetailCardSection({ id, eyebrow, title, subtitle, items, locale, labels, auroraSide }: CardSectionProps) {
+  return (
+    <section aria-labelledby={id} className="section-y relative isolate">
+      <Aurora className={auroraSide === "end" ? "-end-60 top-1/4" : "-start-60 top-1/4"} />
+      <div className="container-lux">
+        <SectionHeader id={id} eyebrow={eyebrow} title={title} subtitle={subtitle} />
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 xl:gap-7">
+          {items.slice(0, 4).map((item, i) => (
+            <DetailCard key={item.id} item={item} locale={locale} index={i} labels={labels} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function AboutPage({ params }: PageProps<"/[locale]/about">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
   const t = dict.about;
+  const name = tr(site.name, locale);
+  const modalLabels = { learnMore: dict.common.learnMore, close: dict.common.close, highlights: dict.services.benefits };
 
   return (
     <>
-      <PageHero locale={locale} common={dict.common} title={t.title} subtitle={t.subtitle} image={media.coat} />
+      {/* 1 — Hero: the same hero as Home, with About-specific text */}
+      <Hero locale={locale} labels={dict.hero} eyebrow={t.heroEyebrow} line1={t.heroLine1} line2={t.heroLine2} />
 
-      {/* Biography */}
-      <section aria-labelledby="bio-title" className="section-y relative isolate">
+      {/* 2 — Introduction: video (start side) + two text blocks (end side) */}
+      <section aria-labelledby="about-intro-title" className="section-y relative isolate">
         <Aurora className="-start-60 top-0" variant="deep" />
-        <div className="container-lux grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
-          <div data-reveal="start" className="px-6 sm:px-10">
-            <DoctorCard
-              image={media.doctorPortraitAlt}
-              name={tr(site.name, locale)}
-              role={dict.intro.cardRole}
-              alt={tr(site.name, locale)}
-            />
+        <div className="container-lux grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+          <div data-reveal="start" className="relative">
+            <div aria-hidden="true" className="absolute -inset-5 -z-10 rounded-[3rem] bg-linear-to-br from-brand/30 via-transparent to-brand-deep/60 blur-2xl" />
+            <div className="glass glass-interactive rounded-[2.4rem] p-2 sm:p-3">
+              <div>
+                <VideoPlayer
+                  video={aboutVideo}
+                  title={tr(aboutVideo.title, locale)}
+                  playLabel={dict.video.play}
+                  unavailableLabel={dict.video.unavailable}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col items-start gap-6">
-            <span className="eyebrow" data-reveal="">
-              {t.bioEyebrow}
-            </span>
-            <h2 id="bio-title" data-reveal="" className="text-gradient text-4xl leading-tight sm:text-5xl">
-              {t.bioTitle}
-            </h2>
-            {tr(biography, locale).map((paragraph, i) => (
-              <p key={i} data-reveal="" style={delay(100 + i * 80)} className="text-base leading-loose text-mist/75 sm:text-lg">
-                {paragraph}
-              </p>
+
+          <div className="grid gap-5">
+            {t.introBlocks.map((block, i) => (
+              <GlassCard key={block.title} reveal="end" delay={i * 120} className="flex flex-col justify-center gap-4 overflow-hidden rounded-[2rem] p-7 sm:p-9">
+                <div aria-hidden="true" className="absolute -end-12 -top-12 -z-10 h-32 w-32 rounded-full bg-brand/20 blur-2xl" />
+                <div className="flex items-center gap-4">
+                  <span className="glass-chip h-11 w-11 shrink-0 rounded-xl font-display text-lg text-white">{i + 1}</span>
+                  <h2 id={i === 0 ? "about-intro-title" : undefined} className="text-gradient text-2xl leading-tight sm:text-3xl">
+                    {block.title}
+                  </h2>
+                </div>
+                <p className="text-base leading-loose text-mist/75">{block.text}</p>
+              </GlassCard>
             ))}
-            <ul className="flex flex-wrap gap-2.5 pt-2" data-reveal="" style={delay(360)}>
-              {tr(expertise, locale).map((item) => (
-                <li
-                  key={item}
-                  className="rounded-full bg-brand/10 px-4 py-2 text-sm text-brand-pale shadow-[inset_0_0_0_1px_rgb(72_164_164/0.35),inset_0_1px_0_rgb(255_255_255/0.1)]"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>
 
-      {/* Credentials */}
-      <section aria-labelledby="credentials-title" className="section-y relative isolate">
-        <Aurora className="-end-60 top-1/4" />
+      {/* 3 — Latest technologies */}
+      <DetailCardSection
+        id="tech-title"
+        eyebrow={t.techEyebrow}
+        title={t.techTitle}
+        subtitle={t.techSubtitle}
+        items={technologies}
+        locale={locale}
+        labels={modalLabels}
+        auroraSide="end"
+      />
+
+      {/* 4 — Key areas / main specialties */}
+      <DetailCardSection
+        id="areas-title"
+        eyebrow={t.areasEyebrow}
+        title={t.areasTitle}
+        subtitle={t.areasSubtitle}
+        items={keyAreas}
+        locale={locale}
+        labels={modalLabels}
+        auroraSide="start"
+      />
+
+      {/* 5 — Career journey */}
+      <section aria-labelledby="journey-about-title" className="section-y relative isolate">
+        <Aurora className="-end-60 top-1/3" variant="deep" />
         <div className="container-lux">
-          <SectionHeader id="credentials-title" eyebrow={t.credentialsEyebrow} title={t.credentialsTitle} />
-          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {credentials.map((credential, i) => (
-              <li key={credential.id}>
-                <GlassCard tilt reveal="up" delay={i * 100} className="flex h-full flex-col gap-5 p-7">
-                  <div className="flex items-center justify-between">
-                    <span className="glass-chip h-12 w-12 rounded-xl">
-                      <Icon name={credential.icon} size={22} />
-                    </span>
-                    <span className="font-display text-2xl text-brand/80">{credential.year}</span>
+          <SectionHeader id="journey-about-title" eyebrow={t.journeyEyebrow} title={t.journeyTitle} subtitle={t.journeySubtitle} />
+          <div className="mx-auto mt-16 max-w-6xl">
+            <CareerTimeline milestones={milestones} locale={locale} />
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — Achievements */}
+      <section aria-labelledby="achievements-title" className="section-y relative isolate">
+        <Aurora className="-start-60 top-1/4" />
+        <div className="container-lux">
+          <SectionHeader id="achievements-title" eyebrow={t.achievementsEyebrow} title={t.achievementsTitle} />
+          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {achievements.map((achievement, i) => (
+              <li key={achievement.id}>
+                <GlassCard tilt reveal="up" delay={(i % 3) * 100} className="flex h-full gap-5 overflow-hidden p-6 sm:p-7">
+                  <div aria-hidden="true" className="absolute -bottom-10 -end-10 -z-10 h-28 w-28 rounded-full bg-brand/20 blur-2xl" />
+                  <span className="glass-chip h-12 w-12 shrink-0 rounded-2xl">
+                    <Icon name={achievement.icon} size={22} />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-sans text-lg font-semibold text-white">{tr(achievement.title, locale)}</h3>
+                    <p className="text-sm leading-relaxed text-mist/65">{tr(achievement.text, locale)}</p>
                   </div>
-                  <h3 className="text-xl leading-snug text-white">{tr(credential.title, locale)}</h3>
-                  <p className="mt-auto text-sm text-mist/60">{tr(credential.issuer, locale)}</p>
                 </GlassCard>
               </li>
             ))}
@@ -102,77 +170,54 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
         </div>
       </section>
 
-      {/* Experience + Philosophy */}
-      <section aria-labelledby="experience-title" className="section-y relative isolate">
-        <div className="container-lux grid gap-10 lg:grid-cols-2 lg:gap-12">
-          <GlassCard reveal="start" className="p-7 sm:p-10">
-            <header className="mb-10 flex flex-col items-start gap-4">
-              <span className="eyebrow">{t.experienceEyebrow}</span>
-              <h2 id="experience-title" className="text-gradient text-3xl sm:text-4xl">
-                {t.experienceTitle}
-              </h2>
-            </header>
-            <div className="relative">
-            <span aria-hidden="true" className="flow-light-y absolute bottom-2 start-[0.45rem] top-2 w-[2px] rounded-full" />
-            <ol className="grid gap-8 ps-8">
-              {milestones.map((milestone) => (
-                <li key={milestone.id} className="relative">
-                  <span
-                    aria-hidden="true"
-                    className="absolute -start-8 top-1.5 h-4 w-4 rounded-full bg-brand shadow-[0_0_0_4px_rgb(72_164_164/0.2),0_0_14px_#48A4A4]"
-                  />
-                  <p dir="ltr" className="text-xs font-semibold tracking-[0.15em] text-brand-light rtl:text-right">
-                    {milestone.period}
-                  </p>
-                  <h3 className="mt-1 font-sans text-lg font-semibold text-white">{tr(milestone.role, locale)}</h3>
-                  <p className="text-sm text-mist/60">{tr(milestone.place, locale)}</p>
-                </li>
-              ))}
-            </ol>
-            </div>
-          </GlassCard>
-
-          <GlassCard reveal="end" className="relative flex flex-col justify-center overflow-hidden p-7 sm:p-12">
-            <div aria-hidden="true" className="absolute -bottom-24 -end-24 -z-10 h-72 w-72 rounded-full bg-brand/30 blur-3xl" />
-            <span className="eyebrow self-start">{t.philosophyEyebrow}</span>
-            <Icon name="quote" size={56} className="mt-8 text-brand/60 rtl:-scale-x-100" />
-            <blockquote className="mt-6 font-display text-2xl leading-relaxed text-white sm:text-3xl lg:text-[2.1rem]">
-              {t.philosophyQuote}
-            </blockquote>
-            <p className="mt-8 flex items-center gap-3 text-brand-light">
-              <span aria-hidden="true" className="h-px w-10 bg-brand-light" />
-              {tr(site.name, locale)}
-            </p>
-          </GlassCard>
-        </div>
-      </section>
-
-      {/* Achievements */}
-      <section aria-labelledby="achievements-title" className="section-y relative isolate pb-0 lg:pb-0">
+      {/* 7 — Certificates */}
+      <section aria-labelledby="certificates-title" className="section-y relative isolate">
+        <Aurora className="-end-60 top-1/4" variant="deep" />
         <div className="container-lux">
-          <SectionHeader id="achievements-title" eyebrow={t.achievementsEyebrow} title={t.achievementsTitle} />
-        </div>
-        <Statistics locale={locale} stats={stats} label={t.achievementsTitle} />
-        <div className="container-lux -mt-10 lg:-mt-16">
-          <ul className="grid gap-4 md:grid-cols-2">
-            {tr(achievements, locale).map((item, i) => (
-              <li
-                key={item}
-                data-reveal=""
-                style={delay(i * 90)}
-                className="glass glass-soft glass-interactive flex items-center gap-4 rounded-2xl p-5"
-              >
-                <span className="glass-chip h-10 w-10 shrink-0 rounded-xl">
-                  <Icon name="sparkle" size={18} />
-                </span>
-                <span className="text-mist/85">{item}</span>
-              </li>
-            ))}
-          </ul>
+          <SectionHeader id="certificates-title" eyebrow={t.certificatesEyebrow} title={t.certificatesTitle} subtitle={t.certificatesSubtitle} />
+          <div className="mt-12">
+            <Certificates
+              certificates={certificates}
+              locale={locale}
+              labels={{ heading: t.certificateHeading, view: t.viewCertificate, close: dict.common.close, name }}
+            />
+          </div>
         </div>
       </section>
 
-      <div className="h-20 lg:h-28" />
+      {/* 8 — Philosophy: portrait card (start side) + personal statement (end side) */}
+      <section aria-labelledby="philosophy-title" className="section-y relative isolate">
+        <Aurora className="-start-60 top-10" />
+        <div className="container-lux grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
+          <div data-reveal="start" className="px-6 sm:px-10">
+            <DoctorCard image={media.doctorPortraitAlt} name={name} role={dict.intro.cardRole} alt={name} />
+          </div>
+
+          <div className="flex flex-col items-start gap-6">
+            <span className="eyebrow" data-reveal="">
+              {t.philosophyEyebrow}
+            </span>
+            <h2 id="philosophy-title" data-reveal="" style={delay(80)} className="text-gradient text-4xl leading-tight sm:text-5xl">
+              {t.philosophyTitle}
+            </h2>
+            <GlassCard reveal="up" delay={160} className="overflow-hidden rounded-[2rem] p-7 sm:p-9">
+              <div aria-hidden="true" className="absolute -bottom-16 -end-16 -z-10 h-48 w-48 rounded-full bg-brand/25 blur-3xl" />
+              <Icon name="quote" size={40} className="text-brand/60 rtl:-scale-x-100" />
+              <blockquote className="mt-4 font-display text-2xl leading-relaxed text-white sm:text-[1.75rem]">{t.philosophyQuote}</blockquote>
+            </GlassCard>
+            {t.philosophyBody.map((paragraph, i) => (
+              <p key={i} data-reveal="" style={delay(240 + i * 80)} className="text-base leading-loose text-mist/75 sm:text-lg">
+                {paragraph}
+              </p>
+            ))}
+            <p data-reveal="" style={delay(400)} className="flex items-center gap-3 font-display text-xl text-brand-light">
+              <span aria-hidden="true" className="h-px w-12 bg-linear-to-r from-transparent to-brand-light rtl:bg-linear-to-l" />
+              {name}
+            </p>
+          </div>
+        </div>
+      </section>
+
       <JsonLd
         data={breadcrumbSchema([
           { name: dict.common.home, path: localePath(locale) },

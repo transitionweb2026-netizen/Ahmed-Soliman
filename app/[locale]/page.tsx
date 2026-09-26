@@ -51,10 +51,10 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   return (
     <>
       {/* 1 — Hero */}
-      <Hero locale={locale} labels={dict.hero} />
+      <Hero locale={locale} labels={dict.hero} eyebrow={dict.hero.eyebrow} line1={dict.hero.line1} line2={dict.hero.line2} />
 
-      {/* 2 — Statistics */}
-      <Statistics locale={locale} stats={stats} label={dict.stats.title} overlap />
+      {/* 2 — Statistics (its own section, below the hero) */}
+      <Statistics locale={locale} stats={stats} label={dict.stats.title} />
 
       {/* 3 — About the doctor */}
       <AboutIntro locale={locale} labels={dict.intro} />

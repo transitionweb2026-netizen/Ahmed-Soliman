@@ -6,7 +6,7 @@ import { delay } from "@/lib/motion";
 import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
 import { media } from "@/content/media";
 import { videos } from "@/content/videos";
-import { PageHero } from "@/components/sections/PageHero";
+import { Hero } from "@/components/sections/Hero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Aurora } from "@/components/ui/Aurora";
 import { VideoCard } from "@/components/video/VideoCard";
@@ -31,12 +31,15 @@ export default async function VideosPage({ params }: PageProps<"/[locale]/videos
 
   return (
     <>
-      <PageHero
+      <Hero
         locale={locale}
-        common={dict.common}
-        title={dict.videosPage.title}
-        subtitle={dict.videosPage.subtitle}
+        labels={dict.hero}
+        size="page"
+        eyebrow={dict.videosPage.eyebrow}
+        line1={dict.videosPage.title}
+        line2={dict.videosPage.subtitle}
         image={media.consultation}
+        breadcrumb={{ label: dict.common.breadcrumb, homeLabel: dict.common.home, current: dict.videosPage.title }}
       />
 
       <section aria-label={dict.videosPage.title} className="section-y relative isolate">

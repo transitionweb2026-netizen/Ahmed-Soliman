@@ -13,6 +13,15 @@ export const introVideo: Video = {
   src: "/videos/clinic-tour.mp4",
 };
 
+/** Horizontal introduction video on the About page. */
+export const aboutVideo: Video = {
+  id: "about-intro",
+  title: { ar: "د. أحمد سليمان يعرّفك بنفسه", en: "Dr. Ahmed Soliman introduces himself" },
+  duration: "3:10",
+  poster: media.doctorWithPatient,
+  src: "/videos/about-intro.mp4",
+};
+
 /** Nine short vertical videos. The first three are featured on the home page. */
 export const videos: Video[] = [
   {

@@ -9,11 +9,11 @@ import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
 import { media } from "@/content/media";
 import { services, treatments } from "@/content/services";
 import { site } from "@/content/site";
-import { PageHero } from "@/components/sections/PageHero";
+import { Hero } from "@/components/sections/Hero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Aurora } from "@/components/ui/Aurora";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { Icon } from "@/components/ui/Icon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/services">): Promise<Metadata> {
@@ -66,12 +66,15 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
 
   return (
     <>
-      <PageHero
+      <Hero
         locale={locale}
-        common={dict.common}
-        title={dict.servicesPage.title}
-        subtitle={dict.servicesPage.subtitle}
+        labels={dict.hero}
+        size="page"
+        eyebrow={dict.servicesPage.eyebrow}
+        line1={dict.servicesPage.title}
+        line2={dict.servicesPage.subtitle}
         image={media.operatingRoom}
+        breadcrumb={{ label: dict.common.breadcrumb, homeLabel: dict.common.home, current: dict.servicesPage.title }}
       />
 
       {/* Services */}
@@ -139,11 +142,6 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
           <div className="mt-16 grid gap-6 md:grid-cols-2 lg:gap-8">
             {treatments.map((treatment, i) => {
               const title = tr(treatment.title, locale);
-              const meta: Array<{ icon: IconName; label: string; value: string }> = [
-                { icon: "clock", label: dict.treatments.duration, value: tr(treatment.duration, locale) },
-                { icon: "calendar", label: dict.treatments.sessions, value: tr(treatment.sessions, locale) },
-                { icon: "activity", label: dict.treatments.recovery, value: tr(treatment.recovery, locale) },
-              ];
               return (
                 <article id={treatment.slug} key={treatment.slug} data-reveal="" style={delay((i % 2) * 120)} className="h-full">
                   <div data-tilt className="group glass glass-interactive frame-3d h-full">
@@ -167,21 +165,6 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
 
                       <div className="flex flex-1 flex-col gap-6 p-6 sm:p-8">
                         <p className="leading-relaxed text-mist/75">{tr(treatment.description, locale)}</p>
-
-                        <dl className="grid grid-cols-3 gap-2 sm:gap-3">
-                          {meta.map((m) => (
-                            <div
-                              key={m.label}
-                              className="flex flex-col gap-1.5 rounded-xl bg-white/[0.03] p-3 shadow-[inset_0_0_0_1px_rgb(72_164_164/0.22),inset_0_1px_0_rgb(255_255_255/0.08)]"
-                            >
-                              <dt className="flex items-center gap-1.5 text-[0.7rem] text-mist/55">
-                                <Icon name={m.icon} size={13} className="shrink-0 text-brand-light" />
-                                {m.label}
-                              </dt>
-                              <dd className="text-sm font-semibold text-white">{m.value}</dd>
-                            </div>
-                          ))}
-                        </dl>
 
                         <div className="mt-auto">
                           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-brand-light rtl:tracking-normal">

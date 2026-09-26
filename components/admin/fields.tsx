@@ -17,6 +17,11 @@ type FieldProps = {
   error?: string;
   media: MediaMap;
   rememberMedia: (item: MediaItem) => void;
+  /**
+   * Called after a file is uploaded, picked from the library or removed. When
+   * provided (existing items), the form saves right away so the change is live.
+   */
+  onFileChange?: () => void;
 };
 
 const str = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
@@ -176,7 +181,7 @@ function BlocksEditor({ blocks, onChange, dir }: { blocks: Block[]; onChange: (b
 
 const pickerIcons = iconNames.filter((n) => !["arrow", "chevron", "close", "menu", "plus", "play", "send"].includes(n));
 
-function IconField({ values, setValue, media, rememberMedia, field }: FieldProps & { field: Extract<Field, { type: "icon" }> }) {
+function IconField({ values, setValue, media, rememberMedia, onFileChange, field }: FieldProps & { field: Extract<Field, { type: "icon" }> }) {
   const current = str(values.icon);
   const uploadedId = str(values.icon_media_id);
   const uploaded = uploadedId ? media[uploadedId] : undefined;
@@ -208,10 +213,12 @@ function IconField({ values, setValue, media, rememberMedia, field }: FieldProps
           kind="icon"
           folder={field.folder}
           value={uploaded ?? null}
+          autoSaves={Boolean(onFileChange)}
           onChange={(m) => {
             if (m) rememberMedia(m);
             setValue("icon_media_id", m?.id ?? null);
             if (!m && !isIconName(current)) setValue("icon", "sparkle");
+            onFileChange?.();
           }}
         />
       </div>
@@ -219,8 +226,12 @@ function IconField({ values, setValue, media, rememberMedia, field }: FieldProps
   );
 }
 
-function GalleryField({ values, setValue, media, rememberMedia, field }: FieldProps & { field: Extract<Field, { type: "gallery" }> }) {
+function GalleryField({ values, setValue, media, rememberMedia, onFileChange, field }: FieldProps & { field: Extract<Field, { type: "gallery" }> }) {
   const ids = arr(values.gallery);
+  const update = (next: string[]) => {
+    setValue("gallery", next);
+    onFileChange?.();
+  };
   return (
     <div className="grid gap-3">
       {ids.length > 0 && (
@@ -229,10 +240,10 @@ function GalleryField({ values, setValue, media, rememberMedia, field }: FieldPr
             <li key={id} className="rounded-xl border border-[#e3ebea] p-1.5">
               {media[id] ? <MediaPreview media={media[id]} className="aspect-square h-auto w-full" /> : <div className="aspect-square rounded-lg bg-[#eef3f3]" />}
               <div className="mt-1 flex justify-between">
-                <button type="button" disabled={i === 0} onClick={() => setValue("gallery", ids.map((x, j) => (j === i - 1 ? id : j === i ? ids[i - 1] : x)))} className="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Move earlier">
+                <button type="button" disabled={i === 0} onClick={() => update(ids.map((x, j) => (j === i - 1 ? id : j === i ? ids[i - 1] : x)))} className="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Move earlier">
                   ←
                 </button>
-                <button type="button" onClick={() => setValue("gallery", ids.filter((x) => x !== id))} className="adm-btn adm-btn-ghost adm-btn-icon text-red-700" aria-label="Remove image">
+                <button type="button" onClick={() => update(ids.filter((x) => x !== id))} className="adm-btn adm-btn-ghost adm-btn-icon text-red-700" aria-label="Remove image">
                   ×
                 </button>
               </div>
@@ -245,10 +256,11 @@ function GalleryField({ values, setValue, media, rememberMedia, field }: FieldPr
         folder={field.folder}
         value={null}
         uploadLabel="Upload Image"
+        autoSaves={Boolean(onFileChange)}
         onChange={(m) => {
           if (!m) return;
           rememberMedia(m);
-          if (!ids.includes(m.id)) setValue("gallery", [...ids, m.id]);
+          if (!ids.includes(m.id)) update([...ids, m.id]);
         }}
       />
     </div>
@@ -257,7 +269,7 @@ function GalleryField({ values, setValue, media, rememberMedia, field }: FieldPr
 
 /** Renders the right input for any schema field. */
 export function FieldInput(props: FieldProps) {
-  const { field, values, setValue, error, media, rememberMedia } = props;
+  const { field, values, setValue, error, media, rememberMedia, onFileChange } = props;
 
   const control = (() => {
     switch (field.type) {
@@ -349,6 +361,7 @@ export function FieldInput(props: FieldProps) {
             folder={field.folder}
             value={id ? (media[id] ?? null) : null}
             invalid={Boolean(error)}
+            autoSaves={Boolean(onFileChange)}
             onChange={(m) => {
               if (m) rememberMedia(m);
               setValue(field.name, m?.id ?? null);
@@ -357,6 +370,7 @@ export function FieldInput(props: FieldProps) {
                 const s = Math.round(m.duration_seconds);
                 setValue("duration", `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`);
               }
+              onFileChange?.();
             }}
           />
         );

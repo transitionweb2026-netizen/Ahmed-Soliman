@@ -16,6 +16,8 @@ type MediaUploaderProps = {
   /** Label for the main button, e.g. "Upload video". */
   uploadLabel?: string;
   invalid?: boolean;
+  /** The form saves as soon as the file changes (existing items). */
+  autoSaves?: boolean;
 };
 
 const uploadLabels: Record<MediaKind, string> = {
@@ -31,7 +33,7 @@ const uploadLabels: Record<MediaKind, string> = {
  * type/size validation, live progress with cancel, preview, replace, remove,
  * or pick an existing file from the Media Library.
  */
-export function MediaUploader({ kind, folder, value, onChange, uploadLabel, invalid }: MediaUploaderProps) {
+export function MediaUploader({ kind, folder, value, onChange, uploadLabel, invalid, autoSaves = false }: MediaUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const handleRef = useRef<UploadHandle | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
@@ -121,7 +123,9 @@ export function MediaUploader({ kind, folder, value, onChange, uploadLabel, inva
               {value.width && value.height ? ` · ${value.width}×${value.height}` : ""}
               {value.duration_seconds ? ` · ${Math.round(value.duration_seconds)}s` : ""}
             </p>
-            {justUploaded && <p className="mt-1 text-xs font-semibold text-emerald-700">✓ Uploaded — remember to save</p>}
+            {justUploaded && (
+              <p className="mt-1 text-xs font-semibold text-emerald-700">{autoSaves ? "✓ Uploaded" : "✓ Uploaded — click Create to save it"}</p>
+            )}
             <div className="mt-2 flex flex-wrap gap-2">
               <button type="button" onClick={() => inputRef.current?.click()} className="adm-btn adm-btn-secondary">
                 Replace

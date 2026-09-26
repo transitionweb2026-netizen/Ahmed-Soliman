@@ -33,6 +33,7 @@ export function RecordForm({ target, fields, initialValues, initialMedia, status
   const [media, setMedia] = useState<MediaMap>(initialMedia);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pending, startTransition] = useTransition();
+  const [fileSaveQueued, setFileSaveQueued] = useState(false);
 
   const dirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(saved), [values, saved]);
   const isNew = target.type === "collection" && !target.id;
@@ -51,7 +52,16 @@ export function RecordForm({ target, fields, initialValues, initialMedia, status
   };
   const rememberMedia = (item: MediaItem) => setMedia((m) => ({ ...m, [item.id]: item }));
 
-  function save() {
+  // Uploading, picking or removing a file on an existing item saves right away,
+  // so a replaced image is live without a separate click on "Save changes".
+  const onFileChange = isNew ? undefined : () => setFileSaveQueued(true);
+  useEffect(() => {
+    if (!fileSaveQueued || pending) return;
+    setFileSaveQueued(false);
+    save("file");
+  }, [fileSaveQueued, pending, values]);
+
+  function save(reason: "form" | "file" = "form") {
     startTransition(async () => {
       const result =
         target.type === "collection"
@@ -65,7 +75,10 @@ export function RecordForm({ target, fields, initialValues, initialMedia, status
       }
       setErrors({});
       setSaved(values);
-      toast("success", isNew ? "Created — it's live on the website." : "Saved — the website is updated.");
+      toast(
+        "success",
+        isNew ? "Created — it's live on the website." : reason === "file" ? "File saved — the website is updated." : "Saved — the website is updated.",
+      );
       if (isNew && target.type === "collection") {
         const id = (result.data as { id: string } | undefined)?.id;
         if (id) router.replace(`/admin/${target.key}/${id}`);
@@ -118,6 +131,7 @@ export function RecordForm({ target, fields, initialValues, initialMedia, status
           error={errors[field.name]}
           media={media}
           rememberMedia={rememberMedia}
+          onFileChange={onFileChange}
         />
       ))}
       <div className="sticky bottom-0 -mx-1 flex flex-wrap items-center gap-3 border-t border-[#e3ebea] bg-white/95 px-1 py-3 backdrop-blur">

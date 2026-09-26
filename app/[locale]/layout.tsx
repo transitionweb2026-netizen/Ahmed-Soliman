@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Cormorant_Garamond, IBM_Plex_Sans_Arabic, Manrope, Noto_Kufi_Arabic } from "next/font/google";
 import { getDictionary } from "@/lib/dictionary";
-import { dirOf, isLocale, locales, tr } from "@/lib/i18n";
-import { buildMetadata, physicianSchema } from "@/lib/seo";
-import { site, whatsappLink } from "@/content/site";
+import { dirOf, isLocale, locales, resolveHref, tr } from "@/lib/i18n";
+import { getSection, getSiteData } from "@/lib/cms/data";
+import { pageMetadata, physicianSchema } from "@/lib/seo";
+import { whatsappLink } from "@/content/site";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CTA } from "@/components/sections/CTA";
@@ -40,8 +41,8 @@ const cormorant = Cormorant_Garamond({
   preload: false,
 });
 
-export const dynamicParams = false;
-
+// Note: no `dynamicParams = false` here — with it, pages revalidated after a CMS
+// save would 404 instead of re-rendering. Unknown locales still 404 via isLocale().
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -54,17 +55,19 @@ export const viewport: Viewport = {
 export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const name = tr(site.name, locale);
-  const defaultTitle = `${name} | ${tr(site.specialty, locale)}`;
+  const [site, home] = await Promise.all([getSiteData(), pageMetadata(locale, "home")]);
+  const name = tr(site.settings.name, locale);
+  const defaultTitle = tr(site.settings.seoTitle, locale) || name;
   return {
-    ...buildMetadata({ locale, path: "", title: defaultTitle, description: getDictionary(locale).footer.about }),
-    metadataBase: new URL(site.url),
+    ...home,
+    metadataBase: new URL(site.settings.url),
     // Pages set a plain title; the template appends the doctor's name.
     title: { default: defaultTitle, template: `%s | ${name}` },
     applicationName: name,
     authors: [{ name }],
     category: "health",
     formatDetection: { telephone: false },
+    icons: { icon: site.settings.favicon || "/icon.svg" },
   };
 }
 
@@ -72,6 +75,15 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const [site, cta, navSection, footer] = await Promise.all([
+    getSiteData(),
+    getSection("global.cta"),
+    getSection("global.nav"),
+    getSection("global.footer"),
+  ]);
+  const { contact, settings } = site;
+  const whatsappHref = whatsappLink(contact.whatsappNumber, tr(contact.whatsappMessage, locale));
+  const name = tr(settings.name, locale);
 
   return (
     <html
@@ -95,16 +107,18 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
         <Navbar
           locale={locale}
           labels={dict.nav}
-          name={tr(site.name, locale)}
-          tagline={dict.hero.eyebrow}
-          phone={{ display: site.phone, href: site.phoneHref }}
-          whatsappHref={whatsappLink(dict.cta.whatsappMessage)}
+          links={site.nav.map((item) => ({ key: item.key, href: resolveHref(locale, item.path), label: tr(item.label, locale) }))}
+          book={{ label: tr(navSection.button.label, locale) || dict.nav.book, href: resolveHref(locale, navSection.button.href || "/contact") }}
+          name={name}
+          tagline={tr(settings.tagline, locale)}
+          phone={{ display: contact.phone, href: contact.phoneHref }}
+          whatsappHref={whatsappHref}
         />
         <main id="main">{children}</main>
-        <CTA locale={locale} labels={dict.cta} doctor={{ name: tr(site.name, locale), role: dict.intro.cardRole }} />
-        <Footer locale={locale} dict={dict} />
+        <CTA locale={locale} content={cta} doctorName={name} whatsappHref={whatsappHref} />
+        <Footer locale={locale} dict={dict} site={site} footer={footer} whatsappHref={whatsappHref} />
         <Interactions />
-        <JsonLd data={physicianSchema(locale)} />
+        <JsonLd data={physicianSchema(locale, site, cta.image?.url)} />
       </body>
     </html>
   );

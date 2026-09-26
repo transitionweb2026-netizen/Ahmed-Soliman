@@ -35,7 +35,7 @@ export const site = {
   ] satisfies Array<{ name: string; icon: IconName; href: string }>,
 };
 
-export function whatsappLink(message?: string): string {
-  const base = `https://wa.me/${site.whatsappNumber}`;
+export function whatsappLink(number: string, message?: string): string {
+  const base = `https://wa.me/${number.replace(/\D/g, "")}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }

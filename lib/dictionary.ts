@@ -85,7 +85,7 @@ const ar = {
   reviews: {
     eyebrow: "آراء المرضى",
     title: "قصص تعافٍ حقيقية",
-    rating: "تقييم ٥ من ٥",
+    rating: "تقييم {n} من ٥",
   },
   faq: {
     eyebrow: "الأسئلة الشائعة",
@@ -139,6 +139,7 @@ const ar = {
     certificatesSubtitle: "اضغط على أي شهادة لعرضها بحجم أكبر.",
     certificateHeading: "شهادة",
     viewCertificate: "عرض الشهادة",
+    openPdf: "فتح ملف PDF",
     philosophyEyebrow: "الفلسفة العلاجية",
     philosophyTitle: "كلمة من الطبيب",
     philosophyQuote: "أفضل جراحة هي التي لا يحتاجها المريض، وأفضل علاج هو الذي يعيده إلى حياته كما يحبها.",
@@ -178,6 +179,7 @@ const ar = {
     email: "البريد الإلكتروني",
     address: "العنوان",
     hours: "مواعيد العمل",
+    booking: "الحجز الإلكتروني",
     social: "تابعنا",
     formTitle: "احجز استشارتك",
     formSubtitle: "املأ البيانات وسيتم تحويلك إلى واتساب لتأكيد موعدك مباشرة.",
@@ -292,7 +294,7 @@ const en: Dictionary = {
   reviews: {
     eyebrow: "Patient reviews",
     title: "Real recovery stories",
-    rating: "Rated 5 out of 5",
+    rating: "Rated {n} out of 5",
   },
   faq: {
     eyebrow: "FAQ",
@@ -346,6 +348,7 @@ const en: Dictionary = {
     certificatesSubtitle: "Tap any certificate to view it larger.",
     certificateHeading: "Certificate",
     viewCertificate: "View certificate",
+    openPdf: "Open PDF",
     philosophyEyebrow: "Philosophy of care",
     philosophyTitle: "A word from the doctor",
     philosophyQuote: "The best surgery is the one a patient never needs — and the best treatment is the one that returns them to the life they love.",
@@ -385,6 +388,7 @@ const en: Dictionary = {
     email: "Email",
     address: "Address",
     hours: "Opening hours",
+    booking: "Online booking",
     social: "Follow us",
     formTitle: "Book your consultation",
     formSubtitle: "Fill in your details and you'll be taken to WhatsApp to confirm your appointment directly.",

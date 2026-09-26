@@ -19,6 +19,7 @@ export function TreatmentCard({ treatment, locale, index, sessionsLabel }: Treat
       title={title}
       description={tr(treatment.summary, locale)}
       icon={treatment.icon}
+      iconUrl={treatment.iconUrl}
       index={index}
       footer={
         <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1.5 text-xs text-brand-pale shadow-[inset_0_0_0_1px_rgb(72_164_164/0.3)]">

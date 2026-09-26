@@ -14,6 +14,7 @@ type ArticleCardProps = {
   article: Article;
   locale: Locale;
   labels: { readMore: string; minRead: string; featured?: string; by: string; close: string };
+  /** Used when the article has no author of its own. */
   author: string;
   index?: number;
   /** Wide horizontal layout for the lead story. */
@@ -46,13 +47,13 @@ export function ArticleCard({ article, locale, labels, author, index = 0, featur
       <div data-tilt className="group glass glass-interactive frame-3d h-full">
         <div className={cn("frame-inner flex h-full flex-col", featured && "lg:grid lg:grid-cols-[1.15fr_1fr]")}>
           <div className={cn("relative overflow-hidden", featured ? "aspect-[16/10] lg:aspect-auto lg:min-h-[26rem]" : "aspect-[16/10]")}>
-            <Image
+            {article.image && <Image
               src={article.image}
               alt={title}
               fill
               sizes={featured ? "(min-width: 1024px) 680px, 92vw" : "(min-width: 1024px) 400px, (min-width: 768px) 50vw, 92vw"}
               className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.06]"
-            />
+            />}
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-900/80 via-transparent to-transparent" />
             <span className="glass absolute start-4 top-4 rounded-full px-3.5 py-1 text-xs text-brand-pale">
               {featured && labels.featured ? `${labels.featured} · ` : ""}
@@ -94,7 +95,7 @@ export function ArticleCard({ article, locale, labels, author, index = 0, featur
         size="lg"
         media={
           <div className="frame-inner relative aspect-[16/8]">
-            <Image src={article.image} alt={title} fill sizes="(min-width: 768px) 880px, 95vw" className="object-cover" />
+            {article.image && <Image src={article.image} alt={title} fill sizes="(min-width: 768px) 880px, 95vw" className="object-cover" />}
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/70 via-transparent to-transparent" />
             <span className="glass absolute bottom-4 start-4 rounded-full px-3.5 py-1 text-xs text-brand-pale">
               {tr(article.category, locale)}
@@ -105,12 +106,12 @@ export function ArticleCard({ article, locale, labels, author, index = 0, featur
         <p className="-mt-2 mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-white/[0.08] pb-6 text-sm text-mist/60">
           <span className="inline-flex items-center gap-1.5">
             <Icon name="user" size={14} className="text-brand-light" />
-            {labels.by} {author}
+            {labels.by} {(article.author && tr(article.author, locale)) || author}
           </span>
           <Meta article={article} locale={locale} minRead={labels.minRead} />
         </p>
         <p className="mb-6 text-lg leading-relaxed text-mist/85">{tr(article.excerpt, locale)}</p>
-        <ArticleBody blocks={article.body} locale={locale} />
+        <ArticleBody blocks={article.body[locale]} />
       </Modal>
     </article>
   );

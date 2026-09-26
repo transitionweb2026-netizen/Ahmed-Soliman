@@ -9,7 +9,7 @@ import type { Certificate } from "@/content/types";
 import { Icon } from "@/components/ui/Icon";
 import { Modal } from "@/components/ui/Modal";
 
-type Labels = { heading: string; view: string; close: string; name: string };
+type Labels = { heading: string; view: string; close: string; name: string; pdf: string };
 
 /** A certificate drawn as a framed document; replaced by the real scan when `image` is set. */
 function CertificateFace({ cert, locale, labels, large = false }: { cert: Certificate; locale: Locale; labels: Labels; large?: boolean }) {
@@ -42,7 +42,13 @@ function CertificateFace({ cert, locale, labels, large = false }: { cert: Certif
       <span className={cn("relative h-px bg-brand-deep/50", large ? "w-40" : "w-16")} />
       <span className={cn("relative text-ink-700", large ? "text-base" : "text-[0.7rem]")}>{labels.name}</span>
       <span className={cn("relative text-brand-deep/90", large ? "text-sm" : "text-[0.65rem]")}>
-        {tr(cert.issuer, locale)} · <span dir="ltr">{cert.year}</span>
+        {tr(cert.description, locale)}
+        {cert.year && (
+          <>
+            {" · "}
+            <span dir="ltr">{cert.year}</span>
+          </>
+        )}
       </span>
 
       {/* Seal */}
@@ -105,10 +111,24 @@ export function Certificates({ certificates, locale, labels }: CertificatesProps
         media={active && <CertificateFace cert={active} locale={locale} labels={labels} large />}
       >
         {active && (
-          <p className="flex items-center gap-3 text-mist/75">
-            <Icon name="award" size={18} className="text-brand-light" />
-            {tr(active.issuer, locale)} · <span dir="ltr">{active.year}</span>
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="flex items-center gap-3 text-mist/75">
+              <Icon name="award" size={18} className="text-brand-light" />
+              {tr(active.description, locale)}
+              {active.year && (
+                <>
+                  {" · "}
+                  <span dir="ltr">{active.year}</span>
+                </>
+              )}
+            </p>
+            {active.pdf && (
+              <a href={active.pdf} target="_blank" rel="noopener noreferrer" className="btn btn-glass btn-sm">
+                <Icon name="book" size={16} />
+                {labels.pdf}
+              </a>
+            )}
+          </div>
         )}
       </Modal>
     </>

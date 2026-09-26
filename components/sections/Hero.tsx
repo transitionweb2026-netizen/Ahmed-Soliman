@@ -2,21 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { Dictionary } from "@/lib/dictionary";
-import { localePath, type Locale } from "@/lib/i18n";
+import { isExternalHref, localePath, resolveHref, tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
-import { media } from "@/content/media";
+import type { HeroContent, SocialLink } from "@/lib/cms/types";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { SocialContactBar } from "@/components/ui/SocialContactBar";
 
 type HeroProps = {
   locale: Locale;
-  /** Shared hero chrome: button labels, contact bar and scroll cue. */
+  /** Interface labels for the contact bar and scroll cue. */
   labels: Dictionary["hero"];
-  eyebrow: string;
-  line1: string;
-  line2: string;
-  image?: string;
+  /** The page's hero from the CMS (image, texts, buttons, visibility). */
+  content: HeroContent;
+  socials: SocialLink[];
+  phone: { display: string; href: string };
   /** "full" = full-screen (Home, About); "page" = shorter, for inner pages. */
   size?: "full" | "page";
   /** Inner pages show a breadcrumb above the eyebrow. */
@@ -27,8 +27,13 @@ type HeroProps = {
  * The single hero used by every page. Only the text (and optionally the cover
  * image and height) changes from page to page.
  */
-export function Hero({ locale, labels, eyebrow, line1, line2, image = media.heroCover, size = "full", breadcrumb }: HeroProps) {
+export function Hero({ locale, labels, content, socials, phone, size = "full", breadcrumb }: HeroProps) {
+  if (!content.visible) return null;
   const full = size === "full";
+  const buttons = [
+    { ...content.primary, variant: "primary" as const },
+    { ...content.secondary, variant: "glass" as const },
+  ].filter((b) => tr(b.label, locale));
 
   return (
     <section
@@ -41,7 +46,7 @@ export function Hero({ locale, labels, eyebrow, line1, line2, image = media.hero
       {/* Full-bleed cover, edge to edge */}
       <div aria-hidden="true" className="absolute inset-0 -z-30 overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent)]">
         <Image
-          src={image}
+          src={content.image}
           alt=""
           fill
           preload
@@ -85,32 +90,41 @@ export function Hero({ locale, labels, eyebrow, line1, line2, image = media.hero
           )}
 
           <span className="eyebrow rise" style={delay(100)}>
-            {eyebrow}
+            {tr(content.eyebrow, locale)}
           </span>
 
           <h1 id="hero-title" className="flex flex-col gap-4">
             <span style={delay(220)} className="rise text-gradient text-5xl leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
-              {line1}
+              {tr(content.title, locale)}
             </span>
             <span style={delay(360)} className="rise max-w-2xl text-2xl leading-snug text-mist/85 sm:text-3xl lg:text-[2.35rem]">
-              {line2}
+              {tr(content.subtitle, locale)}
             </span>
           </h1>
 
           <div style={delay(500)} className="rise mt-2 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <GlassButton href={localePath(locale, "/contact")} size="lg" icon="calendar">
-              {labels.book}
-            </GlassButton>
-            <GlassButton href={localePath(locale, "/services")} variant="glass" size="lg" arrow>
-              {labels.services}
-            </GlassButton>
+            {buttons.map((button) => (
+              <GlassButton
+                key={button.variant}
+                href={resolveHref(locale, button.href)}
+                external={isExternalHref(button.href)}
+                variant={button.variant}
+                size="lg"
+                icon={button.variant === "primary" ? "calendar" : undefined}
+                arrow={button.variant === "glass"}
+              >
+                {tr(button.label, locale)}
+              </GlassButton>
+            ))}
           </div>
         </div>
 
         {/* Social + contact bar on the opposite side */}
-        <div className="rise xl:pb-1.5" style={delay(650)}>
-          <SocialContactBar label={labels.panelTitle} callLabel={labels.callUs} />
-        </div>
+        {content.showContactPanel && (
+          <div className="rise xl:pb-1.5" style={delay(650)}>
+            <SocialContactBar label={labels.panelTitle} callLabel={labels.callUs} socials={socials} phone={phone} />
+          </div>
+        )}
       </div>
 
       {full && (

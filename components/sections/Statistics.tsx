@@ -2,7 +2,7 @@ import { tr, type Locale } from "@/lib/i18n";
 import type { Stat } from "@/content/types";
 import { CountUp } from "@/components/motion/CountUp";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Icon } from "@/components/ui/Icon";
+import { CmsIcon } from "@/components/ui/CmsIcon";
 
 type StatisticsProps = {
   locale: Locale;
@@ -27,10 +27,10 @@ export function Statistics({ locale, stats, label }: StatisticsProps) {
               >
                 <div aria-hidden="true" className="absolute -end-8 -top-8 -z-10 h-24 w-24 rounded-full bg-brand/20 blur-2xl" />
                 <span className="glass-chip h-9 w-9 rounded-xl sm:h-10 sm:w-10">
-                  <Icon name={stat.icon} size={17} />
+                  <CmsIcon icon={stat.icon} url={stat.iconUrl} size={17} />
                 </span>
                 <p className="text-gradient font-display text-3xl leading-none sm:text-4xl lg:text-[2.75rem]">
-                  <CountUp value={stat.value} suffix={stat.suffix} locale={locale} />
+                  <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} locale={locale} />
                 </p>
                 <p className="text-xs text-mist/70 sm:text-sm">{tr(stat.label, locale)}</p>
                 <span aria-hidden="true" className="mt-auto h-px w-full bg-linear-to-r from-brand/70 via-brand/20 to-transparent rtl:bg-linear-to-l" />

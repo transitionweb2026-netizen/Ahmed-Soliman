@@ -1,7 +1,15 @@
 import { media } from "./media";
-import type { Article } from "./types";
+import type { Localized } from "@/lib/i18n";
+import { site } from "./site";
+import type { Article, ArticleBlock } from "./types";
 
-export const articles: Article[] = [
+/** Source format: each block carries both languages side by side. */
+type SourceBlock =
+  | { type: "p" | "h2" | "quote"; text: Localized }
+  | { type: "list"; items: Localized<string[]> };
+type SourceArticle = Omit<Article, "body" | "author"> & { body: SourceBlock[] };
+
+const source: SourceArticle[] = [
   {
     slug: "knee-osteoarthritis-guide",
     date: "2026-08-28",
@@ -226,3 +234,15 @@ export const articles: Article[] = [
     ],
   },
 ];
+
+function inLanguage(blocks: SourceBlock[], locale: keyof Localized): ArticleBlock[] {
+  return blocks.map((block) =>
+    block.type === "list" ? { type: "list", items: block.items[locale] } : { type: block.type, text: block.text[locale] },
+  );
+}
+
+export const articles: Article[] = source.map(({ body, ...article }) => ({
+  ...article,
+  author: site.name,
+  body: { ar: inLanguage(body, "ar"), en: inLanguage(body, "en") },
+}));

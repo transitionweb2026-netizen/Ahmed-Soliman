@@ -1,24 +1,22 @@
 import type { MetadataRoute } from "next";
 import { locales, localePath } from "@/lib/i18n";
-import { navItems } from "@/lib/nav";
-import { articles } from "@/content/articles";
-import { site } from "@/content/site";
+import { getArticles, getSiteData } from "@/lib/cms/data";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = navItems.map((item) => ({
-    path: item.path,
-    lastModified: item.path === "/articles" ? articles[0]?.date : undefined,
-    priority: item.path ? 0.8 : 1,
-  }));
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [site, articles] = await Promise.all([getSiteData(), getArticles()]);
+  const base = site.settings.url;
+  const today = new Date().toISOString().slice(0, 10);
+  // Pages in the CMS navigation (internal links only), plus Home.
+  const paths = ["", ...site.nav.map((n) => n.path).filter((p) => p.startsWith("/") && p !== "/")];
 
-  return pages.flatMap(({ path, lastModified, priority }) =>
+  return [...new Set(paths)].flatMap((path) =>
     locales.map((locale) => ({
-      url: `${site.url}${localePath(locale, path)}`,
-      lastModified: lastModified ?? new Date().toISOString().slice(0, 10),
+      url: `${base}${localePath(locale, path)}`,
+      lastModified: path === "/articles" && articles[0]?.date ? articles[0].date : today,
       changeFrequency: "monthly" as const,
-      priority,
+      priority: path ? 0.8 : 1,
       alternates: {
-        languages: Object.fromEntries(locales.map((l) => [l, `${site.url}${localePath(l, path)}`])),
+        languages: Object.fromEntries(locales.map((l) => [l, `${base}${localePath(l, path)}`])),
       },
     })),
   );

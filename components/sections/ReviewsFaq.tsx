@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/dictionary";
-import type { Locale } from "@/lib/i18n";
+import { tr, type Locale } from "@/lib/i18n";
+import type { SectionContent } from "@/lib/cms/types";
 import type { Faq, Review } from "@/content/types";
 import { ReviewCard } from "@/components/cards/ReviewCard";
 import { Aurora } from "@/components/ui/Aurora";
@@ -9,7 +10,10 @@ type ReviewsFaqProps = {
   locale: Locale;
   reviews: Review[];
   faqs: Faq[];
-  dict: Pick<Dictionary, "reviews" | "faq">;
+  /** CMS blocks "home.reviews" and "home.faq" (eyebrow + title each). */
+  reviewsContent: SectionContent;
+  faqContent: SectionContent;
+  ratingLabel: Dictionary["reviews"]["rating"];
 };
 
 function ColumnHeader({ id, eyebrow, title }: { id: string; eyebrow: string; title: string }) {
@@ -24,25 +28,32 @@ function ColumnHeader({ id, eyebrow, title }: { id: string; eyebrow: string; tit
 }
 
 /** Home section 10 — reviews (2×2) on the start side, FAQ on the end side. */
-export function ReviewsFaq({ locale, reviews, faqs, dict }: ReviewsFaqProps) {
+export function ReviewsFaq({ locale, reviews, faqs, reviewsContent, faqContent, ratingLabel }: ReviewsFaqProps) {
+  if (!reviews.length && !faqs.length) return null;
+  const reviewsTitle = tr(reviewsContent.title, locale);
+  const faqTitle = tr(faqContent.title, locale);
   return (
-    <section aria-label={`${dict.reviews.title} · ${dict.faq.title}`} className="section-y relative isolate">
+    <section aria-label={`${reviewsTitle} · ${faqTitle}`} className="section-y relative isolate">
       <Aurora className="-start-60 bottom-0" />
       <Aurora className="-end-60 top-0" variant="deep" />
       <div className="container-lux grid gap-16 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-        <div aria-labelledby="reviews-title" role="region">
-          <ColumnHeader id="reviews-title" eyebrow={dict.reviews.eyebrow} title={dict.reviews.title} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {reviews.slice(0, 4).map((review, i) => (
-              <ReviewCard key={review.id} review={review} locale={locale} ratingLabel={dict.reviews.rating} index={i} />
-            ))}
+        {reviews.length > 0 && (
+          <div aria-labelledby="reviews-title" role="region">
+            <ColumnHeader id="reviews-title" eyebrow={tr(reviewsContent.eyebrow, locale)} title={reviewsTitle} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {reviews.slice(0, 4).map((review, i) => (
+                <ReviewCard key={review.id} review={review} locale={locale} ratingLabel={ratingLabel} index={i} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        <div aria-labelledby="faq-title" role="region">
-          <ColumnHeader id="faq-title" eyebrow={dict.faq.eyebrow} title={dict.faq.title} />
-          <FAQ faqs={faqs} locale={locale} />
-        </div>
+        {faqs.length > 0 && (
+          <div aria-labelledby="faq-title" role="region">
+            <ColumnHeader id="faq-title" eyebrow={tr(faqContent.eyebrow, locale)} title={faqTitle} />
+            <FAQ faqs={faqs} locale={locale} />
+          </div>
+        )}
       </div>
     </section>
   );

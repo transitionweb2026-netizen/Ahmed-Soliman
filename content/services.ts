@@ -94,9 +94,7 @@ export const treatments: Treatment[] = [
       ar: ["علاج طبيعي آمن من دم المريض", "يقلل الألم ويحسن الحركة", "قد يؤخر أو يُغني عن الجراحة"],
       en: ["Safe, natural therapy from your own blood", "Reduces pain and improves mobility", "May delay or avoid surgery"],
     },
-    duration: { ar: "٣٠ دقيقة", en: "30 minutes" },
     sessions: { ar: "٢–٣ جلسات", en: "2–3 sessions" },
-    recovery: { ar: "خلال ٤٨ ساعة", en: "Within 48 hours" },
   },
   {
     slug: "rehabilitation",
@@ -115,9 +113,7 @@ export const treatments: Treatment[] = [
       ar: ["استعادة المدى الحركي الكامل", "تقوية العضلات الداعمة", "تقليل خطر تكرار الإصابة"],
       en: ["Restores full range of motion", "Strengthens supporting muscles", "Lowers risk of re-injury"],
     },
-    duration: { ar: "٤٥ دقيقة", en: "45 minutes" },
     sessions: { ar: "٨–١٢ جلسة", en: "8–12 sessions" },
-    recovery: { ar: "تدريجي حسب الحالة", en: "Gradual, case-dependent" },
   },
   {
     slug: "shockwave",
@@ -136,9 +132,7 @@ export const treatments: Treatment[] = [
       ar: ["بدون جراحة أو تخدير", "نتائج ملحوظة خلال أسابيع", "مناسب للحالات المزمنة"],
       en: ["No surgery or anaesthesia", "Noticeable results within weeks", "Ideal for chronic conditions"],
     },
-    duration: { ar: "٢٠ دقيقة", en: "20 minutes" },
     sessions: { ar: "٣–٥ جلسات", en: "3–5 sessions" },
-    recovery: { ar: "فوري", en: "Immediate" },
   },
   {
     slug: "fracture-care",
@@ -157,8 +151,6 @@ export const treatments: Treatment[] = [
       ar: ["جبائر حديثة خفيفة الوزن", "متابعة إشعاعية دقيقة للالتئام", "عودة آمنة للنشاط"],
       en: ["Lightweight modern braces", "Precise imaging follow-up of healing", "A safe return to activity"],
     },
-    duration: { ar: "حسب نوع الكسر", en: "Depends on fracture" },
     sessions: { ar: "متابعة أسبوعية", en: "Weekly follow-up" },
-    recovery: { ar: "٤–٨ أسابيع", en: "4–8 weeks" },
   },
 ];

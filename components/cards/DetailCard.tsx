@@ -5,6 +5,7 @@ import { useState } from "react";
 import { tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { DetailItem } from "@/content/types";
+import { CmsIcon } from "@/components/ui/CmsIcon";
 import { Icon } from "@/components/ui/Icon";
 import { Modal } from "@/components/ui/Modal";
 
@@ -34,18 +35,18 @@ export function DetailCard({ item, locale, index, labels }: DetailCardProps) {
       >
         <span className="frame-inner flex h-full flex-col">
           <span className="relative block aspect-[4/3] overflow-hidden">
-            <Image
+            {item.image && <Image
               src={item.image}
               alt=""
               fill
               sizes="(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.07]"
-            />
+            />}
             <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-900 via-ink-900/10 to-transparent" />
           </span>
           <span className="relative flex flex-1 flex-col gap-3 p-6 pt-8">
             <span className="glass-chip absolute -top-6 end-5 h-12 w-12 rounded-2xl transition-transform duration-700 ease-(--ease-lux) group-hover:-translate-y-1 group-hover:rotate-6">
-              <Icon name={item.icon} size={22} />
+              <CmsIcon icon={item.icon} url={item.iconUrl} size={22} />
             </span>
             <span className="font-display text-xl text-white sm:text-[1.3rem]">{title}</span>
             <span className="text-sm leading-relaxed text-mist/65">{tr(item.summary, locale)}</span>
@@ -64,10 +65,10 @@ export function DetailCard({ item, locale, index, labels }: DetailCardProps) {
         closeLabel={labels.close}
         media={
           <div className="frame-inner relative aspect-[16/8]">
-            <Image src={item.image} alt={title} fill sizes="(min-width: 768px) 760px, 95vw" className="object-cover" />
+            {item.image && <Image src={item.image} alt={title} fill sizes="(min-width: 768px) 760px, 95vw" className="object-cover" />}
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/80 via-transparent to-transparent" />
             <span className="glass-chip absolute bottom-4 start-4 h-14 w-14 rounded-2xl">
-              <Icon name={item.icon} size={26} />
+              <CmsIcon icon={item.icon} url={item.iconUrl} size={26} />
             </span>
           </div>
         }

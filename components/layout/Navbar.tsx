@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Dictionary } from "@/lib/dictionary";
 import { localePath, type Locale } from "@/lib/i18n";
-import { navItems } from "@/lib/nav";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -16,13 +15,16 @@ import { MobileNavbar } from "./MobileNavbar";
 type NavbarProps = {
   locale: Locale;
   labels: Dictionary["nav"];
+  /** Menu items from the CMS (Navigation), already resolved to hrefs. */
+  links: Array<{ key: string; href: string; label: string }>;
+  book: { label: string; href: string };
   name: string;
   tagline: string;
   phone: { display: string; href: string };
   whatsappHref: string;
 };
 
-export function Navbar({ locale, labels, name, tagline, phone, whatsappHref }: NavbarProps) {
+export function Navbar({ locale, labels, links: items, book, name, tagline, phone, whatsappHref }: NavbarProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,11 +36,11 @@ export function Navbar({ locale, labels, name, tagline, phone, whatsappHref }: N
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const links = navItems.map((item) => {
-    const href = localePath(locale, item.path);
-    const active = item.path === "" ? pathname === href : pathname.startsWith(href);
-    return { ...item, href, active, label: labels[item.key] };
-  });
+  const home = localePath(locale);
+  const links = items.map((item) => ({
+    ...item,
+    active: item.href === home ? pathname === home : pathname.startsWith(item.href.split("#")[0]),
+  }));
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
@@ -83,8 +85,8 @@ export function Navbar({ locale, labels, name, tagline, phone, whatsappHref }: N
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher locale={locale} label={labels.switchTo} ariaLabel={labels.switchLabel} className="hidden sm:inline-flex" />
-          <GlassButton href={localePath(locale, "/contact")} size="sm" icon="calendar" className="hidden md:inline-flex lg:hidden xl:inline-flex">
-            {labels.book}
+          <GlassButton href={book.href} size="sm" icon="calendar" className="hidden md:inline-flex lg:hidden xl:inline-flex">
+            {book.label}
           </GlassButton>
           <button
             type="button"
@@ -104,6 +106,7 @@ export function Navbar({ locale, labels, name, tagline, phone, whatsappHref }: N
         onClose={() => setMenuOpen(false)}
         locale={locale}
         labels={labels}
+        bookLabel={book.label}
         links={links}
         name={name}
         phone={phone}

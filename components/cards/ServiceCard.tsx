@@ -11,6 +11,7 @@ export function ServiceCard({ service, locale, index }: { service: Service; loca
       title={title}
       description={tr(service.summary, locale)}
       icon={service.icon}
+      iconUrl={service.iconUrl}
       index={index}
     />
   );

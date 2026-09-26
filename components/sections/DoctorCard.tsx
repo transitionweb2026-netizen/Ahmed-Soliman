@@ -2,7 +2,8 @@ import Image from "next/image";
 import { cn } from "@/lib/cn";
 
 type DoctorCardProps = {
-  image: string;
+  /** Portrait from the CMS; the card still renders (without a photo) when empty. */
+  image?: string;
   name: string;
   role: string;
   alt: string;
@@ -36,14 +37,16 @@ export function DoctorCard({ image, name, role, alt, className }: DoctorCardProp
       {/* Front card */}
       <div data-tilt className="glass glass-interactive absolute inset-0 rounded-[2rem] p-2.5">
         <div className="frame-inner relative h-full">
-          <Image
-            src={image}
-            alt={alt}
-            fill
-            quality={85}
-            sizes="(min-width: 1024px) 400px, 85vw"
-            className="object-cover object-top transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.04]"
-          />
+          {image && (
+            <Image
+              src={image}
+              alt={alt}
+              fill
+              quality={85}
+              sizes="(min-width: 1024px) 400px, 85vw"
+              className="object-cover object-top transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.04]"
+            />
+          )}
           <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/90 via-ink-950/10 to-transparent" />
           {/* Printed inner border, like a fine card */}
           <div aria-hidden="true" className="absolute inset-3 rounded-[1.1rem] border border-white/20" />

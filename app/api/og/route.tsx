@@ -1,11 +1,12 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Dr. Ahmed Soliman — Consultant Orthopaedic & Sports Medicine Surgeon";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+const size = { width: 1200, height: 630 };
 
-/** Branded social card (brand gradient + glass panel). */
-export default async function Image() {
+/**
+ * Branded social card (brand gradient + glass panel). Used as the Open Graph
+ * image whenever no OG image has been uploaded in the CMS.
+ */
+export async function GET() {
   return new ImageResponse(
     (
       <div

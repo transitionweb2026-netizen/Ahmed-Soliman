@@ -45,7 +45,7 @@ export function VideoFrame({ video, title, unavailableLabel, sizes }: VideoFrame
 
   return (
     <div className="absolute inset-0">
-      <Image src={video.poster} alt="" fill sizes={sizes} className="object-cover opacity-40 blur-sm" />
+      {video.poster && <Image src={video.poster} alt="" fill sizes={sizes} className="object-cover opacity-40 blur-sm" />}
       <div className="absolute inset-0 grid place-items-center p-6 text-center">
         <p className="glass flex items-center gap-3 rounded-2xl px-5 py-4 text-sm text-mist/90">
           <Icon name="clock" size={18} className="text-brand-light" />

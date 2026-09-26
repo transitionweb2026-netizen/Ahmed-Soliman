@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/dictionary";
-import { localePath, tr, type Locale } from "@/lib/i18n";
-import { navItems } from "@/lib/nav";
-import { site, whatsappLink } from "@/content/site";
+import { localePath, resolveHref, tr, type Locale } from "@/lib/i18n";
+import type { SectionContent, SiteData } from "@/lib/cms/types";
 import { Icon } from "@/components/ui/Icon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Logo } from "./Logo";
@@ -10,16 +9,22 @@ import { Logo } from "./Logo";
 type FooterProps = {
   locale: Locale;
   dict: Dictionary;
+  site: SiteData;
+  /** CMS block "global.footer": body = about text, caption = closing line. */
+  footer: SectionContent;
+  whatsappHref: string;
 };
 
-export function Footer({ locale, dict }: FooterProps) {
+export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps) {
   const year = new Date().getFullYear();
+  const { contact, settings } = site;
+  const name = tr(settings.name, locale);
   const contactRows = [
-    { icon: "phone" as const, label: site.phone, href: site.phoneHref, ltr: true },
-    { icon: "whatsapp" as const, label: dict.contactPage.whatsapp, href: whatsappLink(), external: true },
-    { icon: "mail" as const, label: site.email, href: `mailto:${site.email}`, ltr: true },
-    { icon: "pin" as const, label: tr(site.address, locale) },
-  ];
+    { icon: "phone" as const, label: contact.phone, href: contact.phoneHref, ltr: true },
+    { icon: "whatsapp" as const, label: dict.contactPage.whatsapp, href: whatsappHref, external: true },
+    { icon: "mail" as const, label: contact.email, href: `mailto:${contact.email}`, ltr: true },
+    { icon: "pin" as const, label: tr(contact.address, locale) },
+  ].filter((row) => row.label);
 
   return (
     <footer className="relative isolate overflow-hidden border-t border-white/[0.06] bg-linear-to-b from-transparent to-ink-950">
@@ -28,9 +33,9 @@ export function Footer({ locale, dict }: FooterProps) {
 
       <div className="container-lux grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1fr] lg:py-20">
         <div className="flex flex-col gap-6">
-          <Logo href={localePath(locale)} name={tr(site.name, locale)} tagline={dict.hero.eyebrow} />
-          <p className="max-w-sm text-sm leading-relaxed text-mist/60">{dict.footer.about}</p>
-          <SocialLinks />
+          <Logo href={localePath(locale)} name={name} tagline={tr(settings.tagline, locale)} />
+          <p className="max-w-sm text-sm leading-relaxed text-mist/60">{tr(footer.body, locale)}</p>
+          <SocialLinks socials={site.socials} />
         </div>
 
         <nav aria-label={dict.footer.pages}>
@@ -38,14 +43,14 @@ export function Footer({ locale, dict }: FooterProps) {
             {dict.footer.pages}
           </h2>
           <ul className="grid gap-3 text-sm">
-            {navItems.map((item) => (
+            {site.nav.map((item) => (
               <li key={item.key}>
                 <Link
-                  href={localePath(locale, item.path)}
+                  href={resolveHref(locale, item.path)}
                   className="group inline-flex items-center gap-2 text-mist/65 transition-colors hover:text-white"
                 >
                   <span className="h-px w-3 bg-brand/60 transition-all duration-500 group-hover:w-5 group-hover:bg-brand-light" />
-                  {dict.nav[item.key]}
+                  {tr(item.label, locale)}
                 </Link>
               </li>
             ))}
@@ -94,7 +99,7 @@ export function Footer({ locale, dict }: FooterProps) {
           <div className="glass glass-soft rounded-2xl p-5 text-sm">
             <p className="flex items-center gap-3 text-mist/80">
               <Icon name="clock" size={18} className="text-brand-light" />
-              {tr(site.hours, locale)}
+              {tr(contact.hours, locale)}
             </p>
           </div>
         </div>
@@ -102,9 +107,9 @@ export function Footer({ locale, dict }: FooterProps) {
 
       <div className="container-lux flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] py-7 text-xs text-mist/45 sm:flex-row">
         <p>
-          © {year} {tr(site.name, locale)}. {dict.footer.rights}
+          © {year} {name}. {dict.footer.rights}
         </p>
-        <p>{dict.footer.tagline}</p>
+        <p>{tr(footer.caption, locale)}</p>
       </div>
     </footer>
   );

@@ -21,11 +21,13 @@ export function CardShowcase({ id, eyebrow, title, subtitle, cta, children, auro
       <div className="container-lux">
         <SectionHeader id={id} eyebrow={eyebrow} title={title} subtitle={subtitle} />
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 xl:gap-7">{children}</div>
-        <div className="mt-14 flex justify-center" data-reveal="">
-          <GlassButton href={cta.href} size="lg" arrow>
-            {cta.label}
-          </GlassButton>
-        </div>
+        {cta.label && (
+          <div className="mt-14 flex justify-center" data-reveal="">
+            <GlassButton href={cta.href} external={/^https?:/i.test(cta.href)} size="lg" arrow>
+              {cta.label}
+            </GlassButton>
+          </div>
+        )}
       </div>
     </section>
   );

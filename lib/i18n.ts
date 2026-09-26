@@ -29,6 +29,22 @@ export function localePath(locale: Locale, path = ""): string {
   return `/${locale}${path}`;
 }
 
+/**
+ * Turn a link stored in the CMS into a real href. Internal paths are stored
+ * without the language ("/services#treatments") and get the current locale;
+ * external, tel:, mailto: and #anchor links pass through unchanged.
+ */
+export function resolveHref(locale: Locale, href: string): string {
+  if (!href) return localePath(locale);
+  if (/^(https?:|mailto:|tel:|#)/i.test(href)) return href;
+  if (href.startsWith("/")) return localePath(locale, href === "/" ? "" : href);
+  return href;
+}
+
+export function isExternalHref(href: string): boolean {
+  return /^https?:/i.test(href);
+}
+
 export const ogLocale: Localized = { ar: "ar_EG", en: "en_US" };
 
 export function formatDate(iso: string, locale: Locale): string {

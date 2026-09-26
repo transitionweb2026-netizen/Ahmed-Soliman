@@ -5,28 +5,21 @@ import { cn } from "@/lib/cn";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localePath, tr } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
-import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
-import { media } from "@/content/media";
-import { services, treatments } from "@/content/services";
-import { site } from "@/content/site";
-import { Hero } from "@/components/sections/Hero";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { getHero, getSection, getServices, getSiteData, getTreatments } from "@/lib/cms/data";
+import { CmsHero } from "@/components/sections/CmsHero";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Aurora } from "@/components/ui/Aurora";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { CmsIcon } from "@/components/ui/CmsIcon";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/services">): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const dict = getDictionary(locale);
-  return buildMetadata({
-    locale,
-    path: "/services",
-    title: dict.servicesPage.title,
-    description: dict.servicesPage.subtitle,
-    image: media.operatingRoom,
-  });
+  const hero = await getHero("services");
+  return pageMetadata(locale, "services", hero.image);
 }
 
 function BenefitList({ items }: { items: string[] }) {
@@ -48,6 +41,14 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const [site, hero, services, treatments, servicesSection, treatmentsSection] = await Promise.all([
+    getSiteData(),
+    getHero("services"),
+    getServices(),
+    getTreatments(),
+    getSection("services.services"),
+    getSection("services.treatments"),
+  ]);
 
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -59,29 +60,25 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
         "@type": "MedicalProcedure",
         name: tr(item.title, locale),
         description: tr(item.description, locale),
-        performer: { "@id": `${site.url}/#physician` },
+        performer: { "@id": `${site.settings.url}/#physician` },
       },
     })),
   };
 
   return (
     <>
-      <Hero
-        locale={locale}
-        labels={dict.hero}
-        size="page"
-        eyebrow={dict.servicesPage.eyebrow}
-        line1={dict.servicesPage.title}
-        line2={dict.servicesPage.subtitle}
-        image={media.operatingRoom}
-        breadcrumb={{ label: dict.common.breadcrumb, homeLabel: dict.common.home, current: dict.servicesPage.title }}
-      />
+      <CmsHero locale={locale} page="services" size="page" breadcrumb />
 
       {/* Services */}
       <section id="services" aria-labelledby="services-heading" className="section-y relative isolate">
         <Aurora className="-end-60 top-20" />
         <div className="container-lux">
-          <SectionHeader id="services-heading" eyebrow={dict.services.eyebrow} title={dict.services.title} subtitle={dict.services.subtitle} />
+          <SectionHeader
+            id="services-heading"
+            eyebrow={tr(servicesSection.eyebrow, locale)}
+            title={tr(servicesSection.title, locale)}
+            subtitle={tr(servicesSection.subtitle, locale)}
+          />
 
           <div className="mt-20 grid gap-20 lg:gap-28">
             {services.map((service, i) => {
@@ -93,24 +90,38 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
                     <div aria-hidden="true" className="absolute -inset-4 -z-10 rounded-[3rem] bg-linear-to-br from-brand/25 via-transparent to-brand-deep/60 blur-2xl" />
                     <div data-tilt className="group glass glass-interactive frame-3d">
                       <div className="frame-inner relative aspect-[4/3]">
-                        <Image
-                          src={service.image}
-                          alt={title}
-                          fill
-                          sizes="(min-width: 1024px) 560px, 92vw"
-                          className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
-                        />
+                        {service.image && (
+                          <Image
+                            src={service.image}
+                            alt={title}
+                            fill
+                            sizes="(min-width: 1024px) 560px, 92vw"
+                            className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
+                          />
+                        )}
                         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/70 to-transparent" />
                         <span className="glass absolute bottom-4 start-4 rounded-full px-4 py-1.5 font-display text-sm text-brand-pale">
                           {String(i + 1).padStart(2, "0")} / {String(services.length).padStart(2, "0")}
                         </span>
                       </div>
                     </div>
+                    {/* Optional extra photos uploaded for this service */}
+                    {service.gallery && service.gallery.length > 0 && (
+                      <ul className="mt-4 grid grid-cols-4 gap-3">
+                        {service.gallery.slice(0, 4).map((photo) => (
+                          <li key={photo} className="glass relative aspect-square overflow-hidden rounded-2xl p-1">
+                            <span className="frame-inner relative block h-full rounded-xl">
+                              <Image src={photo} alt="" fill sizes="140px" className="object-cover" />
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <div className="flex flex-col items-start gap-6" data-reveal="" style={delay(120)}>
                     <span className="glass-chip h-14 w-14 rounded-2xl">
-                      <Icon name={service.icon} size={26} />
+                      <CmsIcon icon={service.icon} url={service.iconUrl} size={26} />
                     </span>
                     <h3 className="text-gradient text-3xl leading-tight sm:text-4xl">{title}</h3>
                     <p className="text-base leading-loose text-mist/75 sm:text-lg">{tr(service.description, locale)}</p>
@@ -134,9 +145,9 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
         <div className="container-lux">
           <SectionHeader
             id="treatments-heading"
-            eyebrow={dict.treatments.eyebrow}
-            title={dict.treatments.title}
-            subtitle={dict.treatments.subtitle}
+            eyebrow={tr(treatmentsSection.eyebrow, locale)}
+            title={tr(treatmentsSection.title, locale)}
+            subtitle={tr(treatmentsSection.subtitle, locale)}
           />
 
           <div className="mt-16 grid gap-6 md:grid-cols-2 lg:gap-8">
@@ -147,17 +158,19 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
                   <div data-tilt className="group glass glass-interactive frame-3d h-full">
                     <div className="frame-inner flex h-full flex-col">
                       <div className="relative aspect-[16/9] overflow-hidden">
-                        <Image
-                          src={treatment.image}
-                          alt={title}
-                          fill
-                          sizes="(min-width: 768px) 600px, 92vw"
-                          className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
-                        />
+                        {treatment.image && (
+                          <Image
+                            src={treatment.image}
+                            alt={title}
+                            fill
+                            sizes="(min-width: 768px) 600px, 92vw"
+                            className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
+                          />
+                        )}
                         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-900 via-ink-900/20 to-transparent" />
                         <div className="absolute inset-x-6 bottom-5 flex items-center gap-4">
                           <span className="glass-chip h-12 w-12 shrink-0 rounded-2xl">
-                            <Icon name={treatment.icon} size={22} />
+                            <CmsIcon icon={treatment.icon} url={treatment.iconUrl} size={22} />
                           </span>
                           <h3 className="text-2xl leading-tight text-white sm:text-[1.7rem]">{title}</h3>
                         </div>
@@ -185,9 +198,9 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
       <JsonLd
         data={[
           serviceSchema,
-          breadcrumbSchema([
+          breadcrumbSchema(site.settings.url, [
             { name: dict.common.home, path: localePath(locale) },
-            { name: dict.servicesPage.title, path: localePath(locale, "/services") },
+            { name: tr(hero.title, locale), path: localePath(locale, "/services") },
           ]),
         ]}
       />

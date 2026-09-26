@@ -14,6 +14,7 @@ type MobileNavbarProps = {
   onClose: () => void;
   locale: Locale;
   labels: Dictionary["nav"];
+  bookLabel: string;
   links: Array<{ key: string; href: string; label: string; active: boolean }>;
   name: string;
   phone: { display: string; href: string };
@@ -24,7 +25,7 @@ type MobileNavbarProps = {
  * Full-screen glass menu for small screens. Built on a modal <dialog>, so the
  * browser provides focus trapping, Escape-to-close and an inert background.
  */
-export function MobileNavbar({ open, onClose, locale, labels, links, name, phone, whatsappHref }: MobileNavbarProps) {
+export function MobileNavbar({ open, onClose, locale, labels, bookLabel, links, name, phone, whatsappHref }: MobileNavbarProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export function MobileNavbar({ open, onClose, locale, labels, links, name, phone
         <div className="mt-auto grid gap-3 pt-10" style={{ animation: open ? "menu-in 0.7s var(--ease-lux) 480ms both" : undefined }}>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full">
             <Icon name="whatsapp" size={19} />
-            {labels.book}
+            {bookLabel}
           </a>
           <div className="grid grid-cols-2 gap-3">
             <a href={phone.href} className="btn btn-glass w-full" dir="ltr">

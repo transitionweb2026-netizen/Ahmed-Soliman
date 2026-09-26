@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 import { tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { Milestone } from "@/content/types";
-import { Icon } from "@/components/ui/Icon";
+import { CmsIcon } from "@/components/ui/CmsIcon";
 
 function MilestoneCard({ milestone, locale, showPeriod }: { milestone: Milestone; locale: Locale; showPeriod?: boolean }) {
   return (
@@ -62,7 +62,7 @@ export function CareerTimeline({ milestones, locale }: { milestones: Milestone[]
               <span className="relative grid h-11 w-11 place-items-center justify-self-center lg:h-16 lg:w-16">
                 <span aria-hidden="true" className="absolute inset-0 rounded-full bg-brand/30 blur-lg" />
                 <span className="glass glass-strong relative grid h-full w-full place-items-center rounded-full text-brand-light">
-                  <Icon name={milestone.icon} size={20} />
+                  <CmsIcon icon={milestone.icon} url={milestone.iconUrl} size={20} />
                 </span>
               </span>
 

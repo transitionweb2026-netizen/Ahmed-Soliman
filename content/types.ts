@@ -1,60 +1,68 @@
 import type { Localized } from "@/lib/i18n";
 import type { IconName } from "@/components/ui/Icon";
 
-export type Stat = {
+/**
+ * Content shapes rendered by the public site. They are filled from Supabase
+ * (lib/cms/data.ts) and, before the CMS is set up, from the files in content/.
+ *
+ * Icons: `icon` is a built-in icon name; `iconUrl`, when set, is an icon
+ * uploaded in the CMS and takes precedence.
+ */
+type WithIcon = { icon: IconName; iconUrl?: string };
+
+export type Stat = WithIcon & {
   id: string;
   value: number;
+  prefix?: string;
   suffix?: string;
   label: Localized;
-  icon: IconName;
 };
 
-export type Service = {
+export type Service = WithIcon & {
   slug: string;
   title: Localized;
   summary: Localized;
   description: Localized;
   benefits: Localized<string[]>;
   image: string;
-  icon: IconName;
+  /** Optional extra photos shown on the Services page. */
+  gallery?: string[];
 };
 
-export type Treatment = {
+export type Treatment = WithIcon & {
   slug: string;
   title: Localized;
   summary: Localized;
   description: Localized;
   benefits: Localized<string[]>;
-  duration: Localized;
   sessions: Localized;
-  recovery: Localized;
   image: string;
-  icon: IconName;
 };
 
-export type JourneyStep = {
+export type JourneyStep = WithIcon & {
   id: string;
   title: Localized;
   text: Localized;
-  icon: IconName;
 };
 
-export type Reason = {
+export type Reason = WithIcon & {
   id: string;
   title: Localized;
   text: Localized;
-  icon: IconName;
 };
 
 export type Video = {
   id: string;
   title: Localized;
+  description?: Localized;
+  category?: Localized;
   duration: string;
   poster: string;
-  /** Self-hosted file, e.g. "/videos/knee-pain.mp4". */
+  /** Uploaded file, e.g. a Supabase Storage URL or "/videos/knee-pain.mp4". */
   src?: string;
   /** Alternatively, a YouTube video id. */
   youtubeId?: string;
+  featured?: boolean;
 };
 
 export type Review = {
@@ -63,6 +71,8 @@ export type Review = {
   treatment: Localized;
   text: Localized;
   rating: number;
+  avatar?: string;
+  date?: string;
 };
 
 export type Faq = {
@@ -71,11 +81,10 @@ export type Faq = {
   answer: Localized;
 };
 
+/** One block of an article body, in a single language. */
 export type ArticleBlock =
-  | { type: "p"; text: Localized }
-  | { type: "h2"; text: Localized }
-  | { type: "list"; items: Localized<string[]> }
-  | { type: "quote"; text: Localized };
+  | { type: "p" | "h2" | "quote"; text: string }
+  | { type: "list"; items: string[] };
 
 export type Article = {
   slug: string;
@@ -85,41 +94,43 @@ export type Article = {
   readMinutes: number;
   image: string;
   category: Localized;
-  body: ArticleBlock[];
+  author?: Localized;
+  body: Localized<ArticleBlock[]>;
 };
 
 /** Anything shown as a card that opens a detail modal (technologies, specialties). */
-export type DetailItem = {
+export type DetailItem = WithIcon & {
   id: string;
   title: Localized;
   summary: Localized;
   details: Localized<string[]>;
   highlights: Localized<string[]>;
   image: string;
-  icon: IconName;
 };
 
 export type Certificate = {
   id: string;
   title: Localized;
-  issuer: Localized;
+  description: Localized;
   year: string;
-  /** Optional scan of the real certificate; a styled preview is drawn otherwise. */
+  /** Scan of the real certificate; a styled preview is drawn when missing. */
   image?: string;
+  /** Optional PDF of the certificate. */
+  pdf?: string;
 };
 
-export type Milestone = {
+export type Milestone = WithIcon & {
   id: string;
   period: string;
   role: Localized;
   place: Localized;
   text: Localized;
-  icon: IconName;
 };
 
-export type Achievement = {
+export type Achievement = WithIcon & {
   id: string;
   title: Localized;
   text: Localized;
-  icon: IconName;
+  year?: string;
+  image?: string;
 };

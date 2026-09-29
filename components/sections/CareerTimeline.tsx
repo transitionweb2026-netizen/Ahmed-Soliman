@@ -43,7 +43,7 @@ export function CareerTimeline({ milestones, locale }: { milestones: Milestone[]
             <p
               dir="ltr"
               className={cn(
-                "font-display text-4xl text-gradient xl:text-5xl",
+                "stat-number font-display text-4xl text-gradient xl:text-5xl",
                 even ? "text-left rtl:text-right" : "text-right rtl:text-left",
               )}
             >

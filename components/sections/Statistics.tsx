@@ -29,7 +29,7 @@ export function Statistics({ locale, stats, label }: StatisticsProps) {
                 <span className="glass-chip h-9 w-9 rounded-xl sm:h-10 sm:w-10">
                   <CmsIcon icon={stat.icon} url={stat.iconUrl} size={17} />
                 </span>
-                <p className="text-gradient font-display text-3xl leading-none sm:text-4xl lg:text-[2.75rem]">
+                <p className="stat-number text-gradient font-display text-3xl leading-none sm:text-4xl lg:text-[2.75rem]">
                   <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} locale={locale} />
                 </p>
                 <p className="text-xs text-mist/70 sm:text-sm">{tr(stat.label, locale)}</p>

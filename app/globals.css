@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Thmanyah Sans — the Arabic typeface, self-hosted (public/fonts/thmanyah). */
+@font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Black.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: swap; }
+
 /* ───────────────────────────── Design tokens ───────────────────────────── */
 
 @theme {
@@ -34,8 +41,8 @@
 
 /* Fonts are swapped per language: Arabic pages use Arabic faces. */
 html[lang="ar"] {
-  --font-body: var(--font-plex-ar);
-  --font-heading: var(--font-kufi);
+  --font-body: "Thmanyah Sans";
+  --font-heading: "Thmanyah Sans";
 }
 html[lang="en"] {
   --font-body: var(--font-manrope);
@@ -94,8 +101,9 @@ html[lang="en"] {
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
-  html[lang="en"] :is(h1, h2, h3) { font-weight: 500; }
-  html[lang="ar"] :is(h1, h2, h3) { font-weight: 600; line-height: 1.35; }
+  html[lang="en"] :is(h1, h2, h3) { font-weight: 600; }
+  html[lang="en"] body { font-weight: 500; }
+  html[lang="ar"] :is(h1, h2, h3) { font-weight: 700; line-height: 1.35; letter-spacing: 0; }
   html[lang="ar"] body { line-height: 1.85; }
 
   p { text-wrap: pretty; }
@@ -581,3 +589,27 @@ html[lang="en"] {
   [data-tilt] { transform: none !important; }
   .reading-progress { animation: none; transform: scaleX(0); }
 }
+
+/* ───────────────────────────── Type scale per language ─────────────────────────────
+ * Unlayered on purpose so these weights win over utility classes.
+ * Arabic (Thmanyah Sans): Black for the doctor's name and key numbers, Bold for
+ * titles and buttons, Medium for labels, Regular for reading, Light for large
+ * leads and quotations — the contrast between Black and Light gives the rhythm.
+ */
+
+html[lang="ar"] .font-display { font-weight: 700; }
+html[lang="ar"] .eyebrow { font-weight: 500; }
+html[lang="ar"] .btn { font-weight: 700; }
+html[lang="ar"] .hero-name { font-weight: 900; line-height: 1.2; }
+html[lang="ar"] .hero-lead { font-weight: 300; line-height: 1.55; }
+html[lang="ar"] .quote-lux,
+html[lang="ar"] .prose-lux blockquote { font-weight: 300; line-height: 1.75; }
+html[lang="ar"] .prose-lux :is(h2, h3) { font-weight: 700; }
+
+html[lang="en"] .font-display { font-weight: 600; }
+html[lang="en"] .hero-name { font-weight: 700; }
+html[lang="en"] .quote-lux { font-weight: 500; }
+
+/* Numbers (statistics, badges, timeline years): heavier in both languages. */
+html[lang="en"] .stat-number { font-weight: 700; }
+html[lang="ar"] .stat-number { font-weight: 900; }

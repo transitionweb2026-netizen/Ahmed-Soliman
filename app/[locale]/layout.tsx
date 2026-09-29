@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Cormorant_Garamond, IBM_Plex_Sans_Arabic, Manrope, Noto_Kufi_Arabic } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { getDictionary } from "@/lib/dictionary";
 import { dirOf, isLocale, locales, resolveHref, tr } from "@/lib/i18n";
 import { getSection, getSiteData } from "@/lib/cms/data";
@@ -13,20 +13,8 @@ import { Interactions } from "@/components/motion/Interactions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import "../globals.css";
 
-// Arabic is the default language, so its faces are preloaded; the English
-// faces are fetched only when an English page actually uses them.
-const plexArabic = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-plex-ar",
-  display: "swap",
-});
-const kufi = Noto_Kufi_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-kufi",
-  display: "swap",
-});
+// Arabic uses Thmanyah Sans (self-hosted in public/fonts, @font-face in
+// globals.css). The English faces below are fetched only by English pages.
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
@@ -91,9 +79,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       dir={dirOf(locale)}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${plexArabic.variable} ${kufi.variable} ${manrope.variable} ${cormorant.variable}`}
+      className={`${manrope.variable} ${cormorant.variable}`}
     >
       <head>
+        {/* Arabic pages: fetch the two weights seen first (body text and the hero name) right away. */}
+        {locale === "ar" &&
+          ["Regular", "Black"].map((weight) => (
+            <link key={weight} rel="preload" href={`/fonts/thmanyah/thmanyahsans-${weight}.woff2`} as="font" type="font/woff2" crossOrigin="" />
+          ))}
         {/* Enables reveal-on-scroll styles only when JS runs, so content is never hidden without it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.js=''" }} />
       </head>

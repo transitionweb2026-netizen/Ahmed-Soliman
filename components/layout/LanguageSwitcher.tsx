@@ -38,7 +38,7 @@ export function LanguageSwitcher({ locale, label, ariaLabel, className, onSwitch
       )}
     >
       <Icon name="globe" size={17} className="text-brand-light transition-transform duration-700 group-hover:rotate-180" />
-      <span className={target === "ar" ? "font-[family-name:var(--font-plex-ar)]" : "font-[family-name:var(--font-manrope)]"}>
+      <span className={target === "ar" ? "font-['Thmanyah_Sans',sans-serif]" : "font-[family-name:var(--font-manrope)]"}>
         {label}
       </span>
     </Link>

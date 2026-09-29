@@ -73,7 +73,7 @@ export function WhyDoctor({ locale, reasons, badge, content }: WhyDoctorProps) {
                 <CmsIcon icon={badge.icon} url={badge.iconUrl} size={22} />
               </span>
               <span className="flex flex-col">
-                <span className="text-gradient font-display text-3xl leading-none">
+                <span className="stat-number text-gradient font-display text-3xl leading-none">
                   {badge.prefix}
                   {number}
                   {badge.suffix}

@@ -265,7 +265,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
             <GlassCard reveal="up" delay={160} className="overflow-hidden rounded-[2rem] p-7 sm:p-9">
               <div aria-hidden="true" className="absolute -bottom-16 -end-16 -z-10 h-48 w-48 rounded-full bg-brand/25 blur-3xl" />
               <Icon name="quote" size={40} className="text-brand/60 rtl:-scale-x-100" />
-              <blockquote className="mt-4 font-display text-2xl leading-relaxed text-white sm:text-[1.75rem]">{tr(philosophy.subtitle, locale)}</blockquote>
+              <blockquote className="quote-lux mt-4 font-display text-2xl leading-relaxed text-white sm:text-[1.75rem]">{tr(philosophy.subtitle, locale)}</blockquote>
             </GlassCard>
             {paragraphs(tr(philosophy.body, locale)).map((paragraph, i) => (
               <p key={i} data-reveal="" style={delay(240 + i * 80)} className="text-base leading-loose text-mist/75 sm:text-lg">

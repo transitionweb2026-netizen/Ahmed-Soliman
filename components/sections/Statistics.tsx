@@ -30,7 +30,7 @@ export function Statistics({ locale, stats, label }: StatisticsProps) {
                   <CmsIcon icon={stat.icon} url={stat.iconUrl} size={17} />
                 </span>
                 <p className="stat-number text-gradient font-display text-3xl leading-none sm:text-4xl lg:text-[2.75rem]">
-                  <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} locale={locale} />
+                  <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                 </p>
                 <p className="text-xs text-mist/70 sm:text-sm">{tr(stat.label, locale)}</p>
                 <span aria-hidden="true" className="mt-auto h-px w-full bg-linear-to-r from-brand/70 via-brand/20 to-transparent rtl:bg-linear-to-l" />

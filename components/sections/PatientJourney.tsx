@@ -1,4 +1,4 @@
-import { tr, type Locale } from "@/lib/i18n";
+import { formatNumber, tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { JourneyStep } from "@/content/types";
 import type { SectionContent } from "@/lib/cms/types";
@@ -20,7 +20,7 @@ type PatientJourneyProps = {
  */
 export function PatientJourney({ locale, steps, content, stepLabel }: PatientJourneyProps) {
   if (!steps.length) return null;
-  const format = new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US", { minimumIntegerDigits: 2 });
+  const stepNumber = (n: number) => formatNumber(n, { minimumIntegerDigits: 2 });
 
   return (
     <section aria-labelledby="journey-title" className="section-y relative isolate overflow-hidden">
@@ -60,12 +60,12 @@ export function PatientJourney({ locale, steps, content, stepLabel }: PatientJou
                     <CmsIcon icon={step.icon} url={step.iconUrl} size={26} />
                   </span>
                   <span className="absolute -end-1 -top-1 grid h-7 min-w-7 place-items-center rounded-full bg-linear-to-br from-brand to-brand-deep px-1 text-[0.7rem] font-bold text-white shadow-[0_0_0_3px_#041414,0_4px_12px_rgb(72_164_164/0.6)]">
-                    {format.format(i + 1)}
+                    {stepNumber(i + 1)}
                   </span>
                 </span>
                 <div className="flex flex-col gap-2 pt-2 lg:pt-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand rtl:tracking-normal">
-                    {stepLabel} {format.format(i + 1)}
+                    {stepLabel} {stepNumber(i + 1)}
                   </p>
                   <h3 className="text-lg text-white xl:text-xl">{tr(step.title, locale)}</h3>
                   <p className="text-sm leading-relaxed text-mist/65">{tr(step.text, locale)}</p>

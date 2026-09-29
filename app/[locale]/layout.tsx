@@ -82,10 +82,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       className={`${manrope.variable} ${cormorant.variable}`}
     >
       <head>
-        {/* Arabic pages: fetch the two weights seen first (body text and the hero name) right away. */}
+        {/* Arabic pages: fetch the two weights seen first (body text and the hero name) right away,
+            and the English digits used by the phone number in the hero. */}
         {locale === "ar" &&
-          ["Regular", "Black"].map((weight) => (
-            <link key={weight} rel="preload" href={`/fonts/thmanyah/thmanyahsans-${weight}.woff2`} as="font" type="font/woff2" crossOrigin="" />
+          ["thmanyah/thmanyahsans-Regular", "thmanyah/thmanyahsans-Black", "digits/manrope-numbers"].map((file) => (
+            <link key={file} rel="preload" href={`/fonts/${file}.woff2`} as="font" type="font/woff2" crossOrigin="" />
           ))}
         {/* Enables reveal-on-scroll styles only when JS runs, so content is never hidden without it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.js=''" }} />

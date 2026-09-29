@@ -7,6 +7,19 @@
 @font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
 @font-face { font-family: "Thmanyah Sans"; src: url("/fonts/thmanyah/thmanyahsans-Black.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: swap; }
 
+/*
+ * Numbers on the Arabic pages use the English typefaces: Manrope and Cormorant
+ * Garamond subsets (public/fonts/digits, lining figures). "* Digits" cover only
+ * 0–9 % + and sit first in the Arabic font stacks, so digits in running text
+ * switch while every letter and punctuation mark stays in Thmanyah Sans.
+ * "* Numbers" add the separators (space , . : / – —) for number-only elements
+ * like "12,000+" or "2006 — 2011".
+ */
+@font-face { font-family: "Manrope Digits"; src: url("/fonts/digits/manrope-numbers.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; unicode-range: U+0025, U+002B, U+0030-0039; }
+@font-face { font-family: "Cormorant Digits"; src: url("/fonts/digits/cormorant-numbers.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap; unicode-range: U+0025, U+002B, U+0030-0039; }
+@font-face { font-family: "Manrope Numbers"; src: url("/fonts/digits/manrope-numbers.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; unicode-range: U+0020, U+0025, U+002B-003A, U+00A0, U+2013-2014; }
+@font-face { font-family: "Cormorant Numbers"; src: url("/fonts/digits/cormorant-numbers.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap; unicode-range: U+0020, U+0025, U+002B-003A, U+00A0, U+2013-2014; }
+
 /* ───────────────────────────── Design tokens ───────────────────────────── */
 
 @theme {
@@ -39,10 +52,11 @@
   }
 }
 
-/* Fonts are swapped per language: Arabic pages use Arabic faces. */
+/* Fonts are swapped per language: Arabic pages use Arabic faces, with the
+ * English digits of the matching role (body → Manrope, display → Cormorant). */
 html[lang="ar"] {
-  --font-body: "Thmanyah Sans";
-  --font-heading: "Thmanyah Sans";
+  --font-body: "Manrope Digits", "Thmanyah Sans";
+  --font-heading: "Cormorant Digits", "Thmanyah Sans";
 }
 html[lang="en"] {
   --font-body: var(--font-manrope);
@@ -592,7 +606,7 @@ html[lang="en"] {
 
 /* ───────────────────────────── Type scale per language ─────────────────────────────
  * Unlayered on purpose so these weights win over utility classes.
- * Arabic (Thmanyah Sans): Black for the doctor's name and key numbers, Bold for
+ * Arabic (Thmanyah Sans): Black for the doctor's name, Bold for
  * titles and buttons, Medium for labels, Regular for reading, Light for large
  * leads and quotations — the contrast between Black and Light gives the rhythm.
  */
@@ -610,6 +624,9 @@ html[lang="en"] .font-display { font-weight: 600; }
 html[lang="en"] .hero-name { font-weight: 700; }
 html[lang="en"] .quote-lux { font-weight: 500; }
 
-/* Numbers (statistics, badges, timeline years): heavier in both languages. */
-html[lang="en"] .stat-number { font-weight: 700; }
-html[lang="ar"] .stat-number { font-weight: 900; }
+/* Numbers (statistics, badges, timeline years): Cormorant Bold in both languages. */
+html[lang] .stat-number { font-weight: 700; }
+
+/* Number-only elements on Arabic pages take the English separators too. */
+html[lang="ar"] :is(.stat-number, .num-display) { font-family: "Cormorant Numbers", "Thmanyah Sans", serif; }
+html[lang="ar"] .num-sans { font-family: "Manrope Numbers", "Thmanyah Sans", sans-serif; }

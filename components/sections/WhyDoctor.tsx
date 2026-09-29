@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { tr, type Locale } from "@/lib/i18n";
+import { formatNumber, tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { Reason, Stat } from "@/content/types";
 import type { SectionContent } from "@/lib/cms/types";
@@ -18,7 +18,7 @@ type WhyDoctorProps = {
 /** Home section 8 — reasons on the start side, framed image on the end side. */
 export function WhyDoctor({ locale, reasons, badge, content }: WhyDoctorProps) {
   const image = content.image;
-  const number = badge ? new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US").format(badge.value) : "";
+  const number = badge ? formatNumber(badge.value) : "";
 
   return (
     <section aria-labelledby="why-title" className="section-y relative isolate">
@@ -73,7 +73,7 @@ export function WhyDoctor({ locale, reasons, badge, content }: WhyDoctorProps) {
                 <CmsIcon icon={badge.icon} url={badge.iconUrl} size={22} />
               </span>
               <span className="flex flex-col">
-                <span className="stat-number text-gradient font-display text-3xl leading-none">
+                <span dir="ltr" className="stat-number text-gradient font-display text-3xl leading-none">
                   {badge.prefix}
                   {number}
                   {badge.suffix}

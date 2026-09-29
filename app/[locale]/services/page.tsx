@@ -100,7 +100,7 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
                           />
                         )}
                         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/70 to-transparent" />
-                        <span className="glass absolute bottom-4 start-4 rounded-full px-4 py-1.5 font-display text-sm text-brand-pale">
+                        <span dir="ltr" className="num-display glass absolute bottom-4 start-4 rounded-full px-4 py-1.5 font-display text-sm text-brand-pale">
                           {String(i + 1).padStart(2, "0")} / {String(services.length).padStart(2, "0")}
                         </span>
                       </div>

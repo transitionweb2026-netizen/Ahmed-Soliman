@@ -9,7 +9,7 @@ function MilestoneCard({ milestone, locale, showPeriod }: { milestone: Milestone
     <div data-tilt className="glass glass-interactive flex flex-col gap-2 rounded-3xl p-6 sm:p-7">
       <div aria-hidden="true" className="absolute -end-10 -top-10 -z-10 h-28 w-28 rounded-full bg-brand/20 blur-2xl" />
       {showPeriod && (
-        <p dir="ltr" className="font-display text-lg text-brand-light rtl:text-right">
+        <p dir="ltr" className="num-display font-display text-lg text-brand-light rtl:text-right">
           {milestone.period}
         </p>
       )}

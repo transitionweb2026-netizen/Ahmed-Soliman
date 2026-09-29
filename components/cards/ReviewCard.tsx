@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { tr, type Locale } from "@/lib/i18n";
+import { formatNumber, tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { Review } from "@/content/types";
 import { Icon } from "@/components/ui/Icon";
@@ -32,7 +32,7 @@ export function ReviewCard({ review, locale, ratingLabel, index }: ReviewCardPro
         <div
           className="flex gap-1 text-brand-light"
           role="img"
-          aria-label={ratingLabel.replace("{n}", new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US").format(review.rating))}
+          aria-label={ratingLabel.replace("{n}", formatNumber(review.rating))}
         >
           {Array.from({ length: review.rating }, (_, i) => (
             <Icon key={i} name="star" size={15} fill="currentColor" />

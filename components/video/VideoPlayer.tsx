@@ -49,7 +49,7 @@ export function VideoPlayer({ video, title, playLabel, unavailableLabel }: Video
             <span className="glass flex items-center justify-between gap-4 rounded-2xl px-5 py-4 text-start">
               <span className="font-display text-lg text-white sm:text-2xl">{title}</span>
               {video.duration && (
-                <span dir="ltr" className="shrink-0 rounded-full bg-white/10 px-3 py-1 text-xs tabular-nums text-brand-pale shadow-[inset_0_0_0_1px_rgb(72_164_164/0.4)]">
+                <span dir="ltr" className="num-sans shrink-0 rounded-full bg-white/10 px-3 py-1 text-xs tabular-nums text-brand-pale shadow-[inset_0_0_0_1px_rgb(72_164_164/0.4)]">
                   {video.duration}
                 </span>
               )}

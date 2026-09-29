@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { formatDate, tr, type Locale } from "@/lib/i18n";
+import { formatDate, formatNumber, tr, type Locale } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import type { Article } from "@/content/types";
 import { ArticleBody } from "@/components/articles/ArticleBody";
@@ -22,7 +22,7 @@ type ArticleCardProps = {
 };
 
 function Meta({ article, locale, minRead }: { article: Article; locale: Locale; minRead: string }) {
-  const minutes = new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US").format(article.readMinutes);
+  const minutes = formatNumber(article.readMinutes);
   return (
     <>
       <span className="inline-flex items-center gap-1.5">

@@ -52,7 +52,7 @@ export function VideoCard({ video, title, description, labels, style }: VideoCar
           )}
           <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/20 to-ink-950/30" />
           {video.duration && (
-            <span dir="ltr" className="glass absolute end-3 top-3 rounded-full px-3 py-1 text-xs tabular-nums text-brand-pale">
+            <span dir="ltr" className="num-sans glass absolute end-3 top-3 rounded-full px-3 py-1 text-xs tabular-nums text-brand-pale">
               {video.duration}
             </span>
           )}

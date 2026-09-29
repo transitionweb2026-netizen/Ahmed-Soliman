@@ -47,10 +47,47 @@ export function isExternalHref(href: string): boolean {
 
 export const ogLocale: Localized = { ar: "ar_EG", en: "en_US" };
 
+/*
+ * Numbers use Western digits (0–9) in both languages — the Arabic site shows
+ * them in the English typefaces (see the digit fonts in globals.css).
+ */
+
+/** Arabic month names, Western digits: "28 أغسطس 2026" / "28 August 2026". */
 export function formatDate(iso: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(new Date(iso));
+}
+
+/** "12,000" in either language. */
+export function formatNumber(value: number, options?: Intl.NumberFormatOptions): string {
+  return new Intl.NumberFormat("en-US", options).format(value);
+}
+
+const EASTERN_DIGITS = /[٠-٩۰-۹٪-٬]/g;
+
+/**
+ * Replace Arabic-Indic digits (٠–٩, ۰–۹) and their percent / decimal /
+ * thousands signs with Western ones. Only numbers change; all other text is
+ * left exactly as written.
+ */
+export function latinDigits(text: string): string {
+  return text.replace(EASTERN_DIGITS, (ch) => {
+    const code = ch.charCodeAt(0);
+    if (code >= 0x0660 && code <= 0x0669) return String(code - 0x0660);
+    if (code >= 0x06f0 && code <= 0x06f9) return String(code - 0x06f0);
+    return code === 0x066a ? "%" : code === 0x066b ? "." : ",";
+  });
+}
+
+/** latinDigits() applied to every string inside a value (objects, arrays). */
+export function latinDigitsDeep<T>(value: T): T {
+  if (typeof value === "string") return latinDigits(value) as T;
+  if (Array.isArray(value)) return value.map(latinDigitsDeep) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, latinDigitsDeep(v)])) as T;
+  }
+  return value;
 }

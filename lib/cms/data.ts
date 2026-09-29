@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import type { Localized } from "@/lib/i18n";
+import { latinDigits, latinDigitsDeep, type Localized } from "@/lib/i18n";
 import { publicSupabase } from "@/lib/supabase/public";
 import { isIconName, type IconName } from "@/components/ui/Icon";
 import type {
@@ -19,7 +19,7 @@ import type {
   Treatment,
   Video,
 } from "@/content/types";
-import { defaultContent, defaultHeroes, defaultSections, defaultSeo, defaultSite } from "./defaults";
+import * as defaults from "./defaults";
 import { emptySection, formatDuration, type HeroContent, type MediaRef, type PageKey, type SectionContent, type SeoContent, type SiteData } from "./types";
 
 /*
@@ -34,14 +34,18 @@ import { emptySection, formatDuration, type HeroContent, type MediaRef, type Pag
 
 type Row = Record<string, unknown>;
 
+// Every text value that reaches the public site passes through latinDigits(),
+// so numbers always show as 0–9 — however they were typed in the CMS.
+const { defaultContent, defaultHeroes, defaultSections, defaultSeo, defaultSite } = latinDigitsDeep({ ...defaults });
+
 // ── Row helpers ────────────────────────────────────────────────────────────
 
-const str = (row: Row, key: string): string => (typeof row[key] === "string" ? (row[key] as string) : "");
+const str = (row: Row, key: string): string => (typeof row[key] === "string" ? latinDigits(row[key] as string) : "");
 const num = (row: Row, key: string): number | null => (row[key] == null ? null : Number(row[key]));
 const loc = (row: Row, field: string): Localized => ({ ar: str(row, `${field}_ar`), en: str(row, `${field}_en`) });
 const list = (row: Row, field: string): Localized<string[]> => ({
-  ar: Array.isArray(row[`${field}_ar`]) ? (row[`${field}_ar`] as string[]) : [],
-  en: Array.isArray(row[`${field}_en`]) ? (row[`${field}_en`] as string[]) : [],
+  ar: Array.isArray(row[`${field}_ar`]) ? (row[`${field}_ar`] as string[]).map(latinDigits) : [],
+  en: Array.isArray(row[`${field}_en`]) ? (row[`${field}_en`] as string[]).map(latinDigits) : [],
 });
 const icon = (row: Row, fallback: IconName = "sparkle"): IconName => (isIconName(row.icon) ? row.icon : fallback);
 
@@ -369,8 +373,8 @@ export async function getFeaturedVideos(): Promise<Video[]> {
 function blocks(value: unknown): ArticleBlock[] {
   if (!Array.isArray(value)) return [];
   return value.flatMap((b): ArticleBlock[] => {
-    if (b?.type === "list" && Array.isArray(b.items)) return [{ type: "list", items: b.items.map(String) }];
-    if ((b?.type === "p" || b?.type === "h2" || b?.type === "quote") && typeof b.text === "string") return [{ type: b.type, text: b.text }];
+    if (b?.type === "list" && Array.isArray(b.items)) return [{ type: "list", items: b.items.map((item: unknown) => latinDigits(String(item))) }];
+    if ((b?.type === "p" || b?.type === "h2" || b?.type === "quote") && typeof b.text === "string") return [{ type: b.type, text: latinDigits(b.text) }];
     return [];
   });
 }

@@ -96,8 +96,9 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
           <h2 className="mb-5 font-sans text-sm font-semibold uppercase tracking-[0.16em] text-brand-light rtl:tracking-normal">
             {dict.footer.hours}
           </h2>
-          <div className="glass glass-soft rounded-2xl p-5 text-sm">
-            <p className="flex items-center gap-3 text-mist/80">
+          {/* Arabic desktop: a little tighter so the hours (English digits are wider) stay on one line. */}
+          <div className="glass glass-soft rounded-2xl p-5 text-sm xl:rtl:px-4">
+            <p className="flex items-center gap-3 text-mist/80 xl:rtl:gap-2">
               <Icon name="clock" size={18} className="text-brand-light" />
               {tr(contact.hours, locale)}
             </p>

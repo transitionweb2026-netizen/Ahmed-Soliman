@@ -13,9 +13,7 @@ import { Modal } from "@/components/ui/Modal";
 type ArticleCardProps = {
   article: Article;
   locale: Locale;
-  labels: { readMore: string; minRead: string; featured?: string; by: string; close: string };
-  /** Used when the article has no author of its own. */
-  author: string;
+  labels: { readMore: string; minRead: string; featured?: string; close: string };
   index?: number;
   /** Wide horizontal layout for the lead story. */
   featured?: boolean;
@@ -38,7 +36,7 @@ function Meta({ article, locale, minRead }: { article: Article; locale: Locale; 
 }
 
 /** Article preview card; the full article opens in a scrollable modal. */
-export function ArticleCard({ article, locale, labels, author, index = 0, featured = false }: ArticleCardProps) {
+export function ArticleCard({ article, locale, labels, index = 0, featured = false }: ArticleCardProps) {
   const [open, setOpen] = useState(false);
   const title = tr(article.title, locale);
 
@@ -87,30 +85,29 @@ export function ArticleCard({ article, locale, labels, author, index = 0, featur
         </div>
       </div>
 
+      {/* Cover image, then category · date · reading time, the title and the text as plain paragraphs. */}
       <Modal
         open={open}
         onClose={() => setOpen(false)}
         title={title}
         closeLabel={labels.close}
-        size="lg"
         media={
-          <div className="frame-inner relative aspect-[16/8]">
-            {article.image && <Image src={article.image} alt={title} fill sizes="(min-width: 768px) 880px, 95vw" className="object-cover" />}
-            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/70 via-transparent to-transparent" />
-            <span className="glass absolute bottom-4 start-4 rounded-full px-3.5 py-1 text-xs text-brand-pale">
-              {tr(article.category, locale)}
-            </span>
+          <div className="frame-inner relative aspect-video">
+            {article.image && <Image src={article.image} alt={title} fill sizes="(min-width: 768px) 750px, 95vw" className="object-cover" />}
+            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-950/65 via-ink-950/10 to-transparent" />
           </div>
         }
+        kicker={
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-medium text-mist/60">
+            <span className="glass rounded-full px-3 py-1 font-semibold text-brand-pale">{tr(article.category, locale)}</span>
+            <time dateTime={article.date}>{formatDate(article.date, locale)}</time>
+            <span aria-hidden="true">·</span>
+            <span>
+              {formatNumber(article.readMinutes)} {labels.minRead}
+            </span>
+          </p>
+        }
       >
-        <p className="-mt-2 mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-white/[0.08] pb-6 text-sm text-mist/60">
-          <span className="inline-flex items-center gap-1.5">
-            <Icon name="user" size={14} className="text-brand-light" />
-            {labels.by} {(article.author && tr(article.author, locale)) || author}
-          </span>
-          <Meta article={article} locale={locale} minRead={labels.minRead} />
-        </p>
-        <p className="mb-6 text-lg leading-relaxed text-mist/85">{tr(article.excerpt, locale)}</p>
         <ArticleBody blocks={article.body[locale]} />
       </Modal>
     </article>

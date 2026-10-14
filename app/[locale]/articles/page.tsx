@@ -22,7 +22,6 @@ export default async function ArticlesPage({ params }: PageProps<"/[locale]/arti
   const dict = getDictionary(locale);
   const [site, hero, articles] = await Promise.all([getSiteData(), getHero("articles"), getArticles()]);
   const labels = { ...dict.articlesPage, close: dict.common.close };
-  const author = tr(site.settings.name, locale);
   const title = tr(hero.title, locale);
   // Published articles in the CMS display order; the first is the featured lead story.
   const [lead, ...rest] = articles;
@@ -36,11 +35,11 @@ export default async function ArticlesPage({ params }: PageProps<"/[locale]/arti
           <Aurora className="-end-60 top-0" />
           <Aurora className="-start-60 bottom-1/4" variant="deep" />
           <div className="container-lux flex flex-col gap-8">
-            <ArticleCard article={lead} locale={locale} labels={labels} author={author} featured />
+            <ArticleCard article={lead} locale={locale} labels={labels} featured />
             {rest.length > 0 && (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
                 {rest.map((article, i) => (
-                  <ArticleCard key={article.slug} article={article} locale={locale} labels={labels} author={author} index={i % 3} />
+                  <ArticleCard key={article.slug} article={article} locale={locale} labels={labels} index={i % 3} />
                 ))}
               </div>
             )}

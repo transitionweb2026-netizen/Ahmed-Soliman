@@ -1,27 +1,21 @@
 import type { ArticleBlock } from "@/content/types";
 
-/** Renders an article body (one language) with the `.prose-lux` reading styles. */
+/**
+ * Renders an article body (one language) as plain text paragraphs, with the
+ * `.prose-article` reading styles: no subheadings, bullet points or quote
+ * boxes. Every block keeps its text — a subheading or quote becomes a
+ * paragraph, and each list item becomes a paragraph of its own.
+ */
 export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
+  const paragraphs = blocks
+    .flatMap((block) => (block.type === "list" ? block.items : [block.text]))
+    .map((text) => text.trim())
+    .filter(Boolean);
   return (
-    <div className="prose-lux">
-      {blocks.map((block, i) => {
-        switch (block.type) {
-          case "h2":
-            return <h3 key={i}>{block.text}</h3>;
-          case "list":
-            return (
-              <ul key={i}>
-                {block.items.map((item, j) => (
-                  <li key={j}>{item}</li>
-                ))}
-              </ul>
-            );
-          case "quote":
-            return <blockquote key={i}>{block.text}</blockquote>;
-          default:
-            return <p key={i}>{block.text}</p>;
-        }
-      })}
+    <div className="prose-article">
+      {paragraphs.map((text, i) => (
+        <p key={i}>{text}</p>
+      ))}
     </div>
   );
 }

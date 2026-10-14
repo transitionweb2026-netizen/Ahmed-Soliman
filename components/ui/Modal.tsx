@@ -12,6 +12,8 @@ type ModalProps = {
   children: ReactNode;
   /** Optional media rendered above the scrolling body, edge to edge. */
   media?: ReactNode;
+  /** Optional line above the title (an article's category, date and reading time). */
+  kicker?: ReactNode;
   size?: "md" | "lg";
 };
 
@@ -19,7 +21,7 @@ type ModalProps = {
  * Liquid Glass modal on top of the native <dialog>: the browser handles focus
  * trapping, Escape and an inert page behind it. Long content scrolls inside.
  */
-export function Modal({ open, onClose, title, closeLabel, children, media, size = "md" }: ModalProps) {
+export function Modal({ open, onClose, title, closeLabel, children, media, kicker, size = "md" }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -63,6 +65,7 @@ export function Modal({ open, onClose, title, closeLabel, children, media, size 
         <div className="overflow-y-auto overscroll-contain">
           {media && <div className="relative p-2.5 pb-0">{media}</div>}
           <div className="p-6 sm:p-10">
+            {kicker && <div className="mb-4 pe-12">{kicker}</div>}
             <h2 id={titleId} className="text-gradient pe-12 text-3xl leading-tight sm:text-4xl">
               {title}
             </h2>

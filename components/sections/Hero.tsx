@@ -94,7 +94,7 @@ export function Hero({ locale, labels, content, socials, phone, size = "full", b
             <span style={delay(220)} className="rise hero-name text-gradient text-5xl leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
               {tr(content.title, locale)}
             </span>
-            <span style={delay(360)} className="rise hero-lead max-w-2xl text-2xl leading-snug text-mist/85 sm:text-3xl lg:text-[2.35rem]">
+            <span style={delay(360)} className="rise hero-lead max-w-2xl text-xl leading-snug text-mist/85 sm:text-2xl lg:text-3xl">
               {tr(content.subtitle, locale)}
             </span>
           </h1>

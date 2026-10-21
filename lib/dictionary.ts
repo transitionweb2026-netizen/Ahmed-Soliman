@@ -105,6 +105,7 @@ const ar = {
     hours: "مواعيد العيادة",
     rights: "جميع الحقوق محفوظة.",
     tagline: "صُمم بعناية لرحلة تعافٍ أفضل.",
+    credit: "تصميم وتطوير",
   },
   about: {
     title: "عن د. أحمد سليمان",
@@ -314,6 +315,7 @@ const en: Dictionary = {
     hours: "Clinic hours",
     rights: "All rights reserved.",
     tagline: "Crafted for a better recovery journey.",
+    credit: "Design & Development",
   },
   about: {
     title: "About Dr. Ahmed Soliman",

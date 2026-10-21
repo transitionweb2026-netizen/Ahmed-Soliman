@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/dictionary";
 import { localePath, resolveHref, tr, type Locale } from "@/lib/i18n";
@@ -111,6 +112,24 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
           © {year} {name}. {dict.footer.rights}
         </p>
         <p>{tr(footer.caption, locale)}</p>
+      </div>
+
+      {/* Agency credit: "Design & Development · [logo] · Transition", in the site's teal. */}
+      <div className="border-t border-white/[0.06]">
+        <div className="container-lux flex justify-center py-5">
+          <p
+            className="inline-flex items-center gap-2.5 rounded-full border border-white/15 px-4 py-2 shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
+            style={{ background: "linear-gradient(135deg, var(--color-brand-deep), color-mix(in oklab, var(--color-brand) 70%, var(--color-brand-deep)))" }}
+          >
+            <span className="text-sm text-white/85">{dict.footer.credit}</span>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/30 bg-white/15 backdrop-blur-sm">
+              <Image src="/images/transition-logo.png" alt="" width={32} height={32} className="h-4 w-4 object-contain opacity-90" />
+            </span>
+            <span dir="ltr" className="text-sm font-bold text-white">
+              Transition
+            </span>
+          </p>
+        </div>
       </div>
     </footer>
   );

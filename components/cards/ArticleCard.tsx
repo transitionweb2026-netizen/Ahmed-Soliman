@@ -108,7 +108,7 @@ export function ArticleCard({ article, locale, labels, index = 0, featured = fal
           </p>
         }
       >
-        <ArticleBody blocks={article.body[locale]} />
+        <ArticleBody blocks={article.body[locale]} locale={locale} />
       </Modal>
     </article>
   );

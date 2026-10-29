@@ -52,13 +52,13 @@ export function Hero({ locale, labels, content, socials, phone, size = "full", b
           preload
           quality={85}
           sizes="100vw"
-          className="object-cover object-[70%_center] motion-safe:animate-[hero-zoom_18s_var(--ease-lux)_both] rtl:object-[30%_center]"
+          className="object-cover object-center motion-safe:animate-[hero-zoom_18s_var(--ease-lux)_both] md:object-[30%_center] md:rtl:object-[70%_center]"
         />
       </div>
 
-      {/* Readability + brand light */}
-      <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-950/40 [mask-image:linear-gradient(to_bottom,black_60%,transparent)]" />
-      <div aria-hidden="true" className="absolute inset-0 -z-20 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] bg-linear-to-r from-ink-950/95 via-ink-900/75 to-brand-deep/10 rtl:bg-linear-to-l" />
+      {/* Readability + brand light: dark behind the text only, so the photo stays visible. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-950/45 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] md:bg-ink-950/15" />
+      <div aria-hidden="true" className="absolute inset-0 -z-20 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] bg-linear-to-r from-ink-950/85 via-ink-900/30 to-transparent rtl:bg-linear-to-l" />
       <div aria-hidden="true" className="absolute -bottom-40 -start-40 -z-20 h-[36rem] w-[36rem] rounded-full bg-brand/25 blur-3xl" />
 
       <div
@@ -67,7 +67,7 @@ export function Hero({ locale, labels, content, socials, phone, size = "full", b
           full ? "pb-28 lg:pb-32" : "pb-20 lg:pb-24",
         )}
       >
-        <div className="flex max-w-3xl flex-col items-start gap-7">
+        <div className="flex max-w-xl flex-col items-start gap-6">
           {breadcrumb && (
             <nav aria-label={breadcrumb.label} className="rise" style={delay(40)}>
               <ol className="flex flex-wrap items-center gap-2 text-sm text-mist/60">
@@ -91,10 +91,10 @@ export function Hero({ locale, labels, content, socials, phone, size = "full", b
           </span>
 
           <h1 id="hero-title" className="flex flex-col gap-4">
-            <span style={delay(220)} className="rise hero-name text-gradient text-5xl leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
+            <span style={delay(220)} className="rise hero-name text-gradient text-[2.25rem] leading-[1.05] sm:text-[2.75rem] lg:text-[3.25rem] xl:text-[3.5rem]">
               {tr(content.title, locale)}
             </span>
-            <span style={delay(360)} className="rise hero-lead max-w-2xl text-xl leading-snug text-mist/85 sm:text-2xl lg:text-3xl">
+            <span style={delay(360)} className="rise hero-lead max-w-2xl text-base leading-snug text-mist/85 sm:text-lg lg:text-xl">
               {tr(content.subtitle, locale)}
             </span>
           </h1>

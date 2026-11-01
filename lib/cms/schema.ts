@@ -571,7 +571,7 @@ export const contactFields: Field[] = [
     label: "Clinics (addresses)",
     multiline: true,
     rows: 3,
-    help: "One clinic per line, written “Clinic name: address”. Each line becomes a clinic card on the contact page.",
+    help: "One clinic per line, written “Clinic name: address” — each becomes a clinic card on the contact page. A line without a colon (e.g. the areas you serve) is shown first, under “Our branches”.",
   },
   {
     type: "l10n",
@@ -579,7 +579,7 @@ export const contactFields: Field[] = [
     label: "Working hours",
     multiline: true,
     rows: 3,
-    help: "One line per clinic, in the same order as the addresses above.",
+    help: "One line per clinic, in the same order as the clinics above (lines without a colon have no hours).",
   },
   { type: "url", name: "booking_url", label: "Online booking link (optional)" },
   { type: "url", name: "map_embed_url", label: "Google Maps embed link", help: "In Google Maps: Share → Embed a map → copy the src link." },

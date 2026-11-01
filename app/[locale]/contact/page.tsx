@@ -37,7 +37,7 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
   ]);
   const { contact } = site;
   // One card per clinic (address line + its hours line), see lib/cms/clinics.ts.
-  const { clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
+  const { areas, clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
   const directions =
     contact.latitude != null && contact.longitude != null
       ? `https://www.google.com/maps/dir/?api=1&destination=${contact.latitude},${contact.longitude}`
@@ -119,8 +119,25 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
                   </li>
                 );
               })}
+              {areas.length > 0 && (
+                <li data-reveal="start" style={delay(channels.length * 80)}>
+                  <div className="glass flex items-start gap-4 rounded-2xl p-4">
+                    <span className="glass-chip h-12 w-12 shrink-0 rounded-2xl">
+                      <Icon name="pin" size={21} />
+                    </span>
+                    <span className="flex min-w-0 flex-col gap-1">
+                      <span className="text-xs text-mist/55">{t.branches}</span>
+                      {areas.map((area) => (
+                        <span key={area} className="font-semibold leading-relaxed text-white">
+                          {area}
+                        </span>
+                      ))}
+                    </span>
+                  </div>
+                </li>
+              )}
               {clinics.map((clinic, i) => (
-                <li key={`clinic-${i}`} data-reveal="start" style={delay((channels.length + i) * 80)}>
+                <li key={`clinic-${i}`} data-reveal="start" style={delay((channels.length + 1 + i) * 80)}>
                   <a
                     href={mapsSearchUrl(clinic)}
                     target="_blank"

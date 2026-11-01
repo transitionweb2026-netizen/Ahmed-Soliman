@@ -15,11 +15,11 @@ export const site = {
   phone: "01557802000",
   phoneHref: "tel:+201557802000",
   whatsappNumber: "201557802000",
-  email: "info@drahmedsoliman.com",
-  /** One clinic per line, "Clinic name: address"; the hours below follow the same order. */
+  email: "aspaincare@hotmail.com",
+  /** Areas served first (a line without a colon), then one clinic per line, "Clinic name: address"; the hours follow the clinics' order. */
   address: {
-    ar: "العيادة الرئيسية – الدقي، القاهرة: ٢٤ شارع عمر بن الخطاب، الدور العاشر، متفرع من محيي الدين أبو العز، خلف محمود الفار\nعيادة الإسكندرية: عيادات مستشفى أندلسية الشلالات، شارع السلطان حسين، أمام كلية الطب",
-    en: "Main clinic – Dokki, Cairo: 24 Omar Ibn El-Khattab St., 10th floor, off Mohy El-Din Abu El-Ezz St., behind Mahmoud El-Far\nAlexandria clinic: Andalusia Shallalat Hospital clinics, Sultan Hussein St., opposite the Faculty of Medicine",
+    ar: "المهندسين – الشيخ زايد – التجمع – الإسكندرية\nالعيادة الرئيسية – الدقي، القاهرة: ٢٤ شارع عمر بن الخطاب، الدور العاشر، متفرع من محيي الدين أبو العز، خلف محمود الفار\nعيادة الإسكندرية: عيادات مستشفى أندلسية الشلالات، شارع السلطان حسين، أمام كلية الطب",
+    en: "Mohandessin – Sheikh Zayed – Fifth Settlement – Alexandria\nMain clinic – Dokki, Cairo: 24 Omar Ibn El-Khattab St., 10th floor, off Mohy El-Din Abu El-Ezz St., behind Mahmoud El-Far\nAlexandria clinic: Andalusia Shallalat Hospital clinics, Sultan Hussein St., opposite the Faculty of Medicine",
   } satisfies Localized,
   hours: {
     ar: "الأحد والأربعاء من ٢ إلى ٤ م\nالجمعة من كل أسبوع من ٥:٣٠ إلى ٧:٣٠ م",

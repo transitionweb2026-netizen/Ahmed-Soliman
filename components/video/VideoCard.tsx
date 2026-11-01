@@ -18,6 +18,8 @@ type VideoCardProps = {
 /** Vertical (9:16) glass video card that opens a lightbox player. */
 export function VideoCard({ video, title, description, labels, style }: VideoCardProps) {
   const [open, setOpen] = useState(false);
+  // The player takes the video's own shape (landscape or vertical) as soon as the file reports it.
+  const [ratio, setRatio] = useState(video.youtubeId ? 16 / 9 : 9 / 16);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -72,12 +74,16 @@ export function VideoCard({ video, title, description, labels, style }: VideoCar
           onClose={() => setOpen(false)}
           onClick={(event) => event.target === dialogRef.current && dialogRef.current?.close()}
           aria-label={title}
-          className="m-auto max-h-none max-w-none bg-transparent p-4 backdrop:bg-ink-950/80 backdrop:backdrop-blur-lg"
+          className="m-auto max-h-none max-w-none bg-transparent p-4 sm:px-16 backdrop:bg-ink-950/80 backdrop:backdrop-blur-lg"
         >
-          <div className="relative animate-[dialog-in_0.5s_var(--ease-lux)_both]">
+          {/* As wide as the video at its largest size that fits the screen; the title wraps to that width. */}
+          <div
+            style={{ "--ratio": ratio } as CSSProperties}
+            className="relative w-[min(calc(100vw_-_2rem),calc(min(80dvh,46rem)_*_var(--ratio)_+_1rem))] animate-[dialog-in_0.5s_var(--ease-lux)_both] sm:w-[min(calc(100vw_-_9rem),calc(min(80dvh,46rem)_*_var(--ratio)_+_1rem))]"
+          >
             <div className="glass rounded-[2rem] p-2">
-              <div className="relative aspect-[9/16] h-[min(80dvh,46rem)] overflow-hidden rounded-[1.6rem] bg-black">
-                <VideoFrame video={video} title={title} unavailableLabel={labels.unavailable} sizes="420px" />
+              <div style={{ aspectRatio: ratio }} className="relative w-full overflow-hidden rounded-[1.6rem] bg-black">
+                <VideoFrame video={video} title={title} unavailableLabel={labels.unavailable} sizes="420px" onAspect={setRatio} />
               </div>
             </div>
             <p className="mt-4 text-center font-display text-lg text-white">{title}</p>

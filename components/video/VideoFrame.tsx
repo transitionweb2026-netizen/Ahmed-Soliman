@@ -10,10 +10,12 @@ type VideoFrameProps = {
   title: string;
   unavailableLabel: string;
   sizes: string;
+  /** Called with the video's real width ÷ height once the file's metadata has loaded. */
+  onAspect?: (ratio: number) => void;
 };
 
 /** The actual media element: YouTube, a self-hosted file, or a graceful fallback. */
-export function VideoFrame({ video, title, unavailableLabel, sizes }: VideoFrameProps) {
+export function VideoFrame({ video, title, unavailableLabel, sizes, onAspect }: VideoFrameProps) {
   const [failed, setFailed] = useState(false);
 
   if (video.youtubeId) {
@@ -37,7 +39,12 @@ export function VideoFrame({ video, title, unavailableLabel, sizes }: VideoFrame
         playsInline
         preload="metadata"
         onError={() => setFailed(true)}
-        className="absolute inset-0 h-full w-full bg-black object-cover"
+        onLoadedMetadata={(event) => {
+          const { videoWidth, videoHeight } = event.currentTarget;
+          if (videoWidth && videoHeight) onAspect?.(videoWidth / videoHeight);
+        }}
+        // Never crop: the whole picture is always visible, whatever the frame's shape.
+        className="absolute inset-0 h-full w-full bg-black object-contain"
         aria-label={title}
       />
     );

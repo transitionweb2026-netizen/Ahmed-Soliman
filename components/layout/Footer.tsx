@@ -21,11 +21,12 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
   const year = new Date().getFullYear();
   const { contact, settings } = site;
   const name = tr(settings.name, locale);
-  const { clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
+  const { areas, clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
   const contactRows: Array<{ icon: IconName; label: string; href?: string; external?: boolean; ltr?: boolean }> = [
     { icon: "phone" as const, label: contact.phone, href: contact.phoneHref, ltr: true },
     { icon: "whatsapp" as const, label: dict.contactPage.whatsapp, href: whatsappHref, external: true },
     { icon: "mail" as const, label: contact.email, href: `mailto:${contact.email}`, ltr: true },
+    ...areas.map((area) => ({ icon: "pin" as const, label: `${dict.contactPage.branches}: ${area}` })),
     ...clinics.map((clinic) => ({ icon: "pin" as const, label: clinic.name ? `${clinic.name}: ${clinic.address}` : clinic.address })),
   ].filter((row) => row.label);
 

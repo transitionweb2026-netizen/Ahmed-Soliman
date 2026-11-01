@@ -28,10 +28,10 @@ export const site = {
   /** Map of the main clinic, found by its address (no exact pin yet). */
   mapEmbedUrl: "https://www.google.com/maps?q=24+Omar+Ibn+El-Khattab+St,+Dokki,+Giza,+Egypt&output=embed",
   socials: [
-    { name: "Facebook", icon: "facebook", href: "https://facebook.com/" },
-    { name: "Instagram", icon: "instagram", href: "https://instagram.com/" },
+    { name: "Facebook", icon: "facebook", href: "https://www.facebook.com/share/1GowFVV6tb/" },
+    { name: "Instagram", icon: "instagram", href: "https://www.instagram.com/aspaincarecenter" },
     { name: "YouTube", icon: "youtube", href: "https://youtube.com/" },
-    { name: "TikTok", icon: "tiktok", href: "https://tiktok.com/" },
+    { name: "TikTok", icon: "tiktok", href: "https://www.tiktok.com/@aspaincarecenter" },
   ] satisfies Array<{ name: string; icon: IconName; href: string }>,
 };
 

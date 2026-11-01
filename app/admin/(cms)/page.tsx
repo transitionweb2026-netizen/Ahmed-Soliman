@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-const highlighted = ["services", "treatments", "videos", "articles", "reviews", "certificates", "technologies", "specialties", "faqs"];
+const highlighted = ["services", "treatments", "videos", "articles", "reviews", "technologies", "specialties", "faqs"];
 
 export default async function DashboardPage() {
   const { supabase } = await requireAdmin();

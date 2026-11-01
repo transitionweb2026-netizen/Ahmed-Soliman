@@ -42,6 +42,11 @@ const { defaultContent, defaultHeroes, defaultSections, defaultSeo, defaultSite 
 
 const str = (row: Row, key: string): string => (typeof row[key] === "string" ? latinDigits(row[key] as string) : "");
 const num = (row: Row, key: string): number | null => (row[key] == null ? null : Number(row[key]));
+/** A tel: link that works from abroad too: an Egyptian local number (01xxxxxxxxx) gets the +20 prefix. */
+const telHref = (phone: string) => {
+  const digits = phone.replace(/[^\d+]/g, "");
+  return `tel:${/^0\d{10}$/.test(digits) ? `+20${digits.slice(1)}` : digits}`;
+};
 const loc = (row: Row, field: string): Localized => ({ ar: str(row, `${field}_ar`), en: str(row, `${field}_en`) });
 const list = (row: Row, field: string): Localized<string[]> => ({
   ar: Array.isArray(row[`${field}_ar`]) ? (row[`${field}_ar`] as string[]).map(latinDigits) : [],
@@ -125,7 +130,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
     },
     contact: {
       phone,
-      phoneHref: `tel:${phone.replace(/[^\d+]/g, "")}`,
+      phoneHref: telHref(phone),
       whatsappNumber: str(c, "whatsapp_number"),
       whatsappMessage: loc(c, "whatsapp_message"),
       email: str(c, "email"),
@@ -314,17 +319,6 @@ export const getAchievements = cache(() =>
     image: mediaUrl(m, r.image_id),
     icon: icon(r, "award"),
     iconUrl: mediaUrl(m, r.icon_media_id),
-  })),
-);
-
-export const getCertificates = cache(() =>
-  collection<Certificate>("certificates", defaultContent.certificates, (r, m) => ({
-    id: String(r.id),
-    title: loc(r, "title"),
-    description: loc(r, "description"),
-    year: str(r, "year"),
-    image: mediaUrl(m, r.image_id),
-    pdf: mediaUrl(m, r.pdf_id),
   })),
 );
 

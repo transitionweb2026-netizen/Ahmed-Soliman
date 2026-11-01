@@ -224,24 +224,6 @@ export const collections: CollectionConfig[] = [
     ],
   },
   {
-    key: "certificates",
-    table: "certificates",
-    label: "Certificates",
-    singular: "Certificate",
-    description: "The certificate strip on the About page (click opens an enlarged view).",
-    usedOn: "About page",
-    titleField: "title",
-    thumbField: "image_id",
-    statusField: "is_active",
-    fields: [
-      title("Certificate title"),
-      { type: "l10n", name: "description", label: "Description / issuer", multiline: true, rows: 2 },
-      { type: "text", name: "year", label: "Year" },
-      { type: "media", name: "image_id", label: "Certificate", kind: "certificate", folder: "scans", help: "Upload a scan. Without one, an elegant certificate preview is drawn." },
-      { type: "media", name: "pdf_id", label: "PDF (optional)", kind: "pdf", folder: "pdf" },
-    ],
-  },
-  {
     key: "videos",
     table: "videos",
     label: "Videos",
@@ -502,7 +484,6 @@ export const pageEditors: PageEditor[] = [
       { key: "about.specialties", label: "Key areas — heading", fields: heading() },
       { key: "about.journey", label: "Career journey — heading", fields: heading() },
       { key: "about.achievements", label: "Achievements — heading", fields: heading(false) },
-      { key: "about.certificates", label: "Certificates — heading", fields: heading() },
       {
         key: "about.philosophy",
         label: "Doctor philosophy",
@@ -580,12 +561,26 @@ export const siteSettingsFields: Field[] = [
 ];
 
 export const contactFields: Field[] = [
-  { type: "text", name: "phone", label: "Phone number", placeholder: "+20 100 000 0000", required: true },
-  { type: "text", name: "whatsapp_number", label: "WhatsApp number", placeholder: "201000000000", help: "Digits only, with country code (no + or spaces).", required: true },
+  { type: "text", name: "phone", label: "Phone number", placeholder: "01557802000", required: true, help: "An Egyptian number such as 01557802000 is dialled correctly from abroad too; the contact page also shows it as 0020…" },
+  { type: "text", name: "whatsapp_number", label: "WhatsApp number", placeholder: "201557802000", help: "Digits only, with country code (no + or spaces).", required: true },
   { type: "l10n", name: "whatsapp_message", label: "WhatsApp pre-filled message" },
   { type: "text", name: "email", label: "Email" },
-  { type: "l10n", name: "address", label: "Address", multiline: true, rows: 2 },
-  { type: "l10n", name: "hours", label: "Working hours" },
+  {
+    type: "l10n",
+    name: "address",
+    label: "Clinics (addresses)",
+    multiline: true,
+    rows: 3,
+    help: "One clinic per line, written “Clinic name: address”. Each line becomes a clinic card on the contact page.",
+  },
+  {
+    type: "l10n",
+    name: "hours",
+    label: "Working hours",
+    multiline: true,
+    rows: 3,
+    help: "One line per clinic, in the same order as the addresses above.",
+  },
   { type: "url", name: "booking_url", label: "Online booking link (optional)" },
   { type: "url", name: "map_embed_url", label: "Google Maps embed link", help: "In Google Maps: Share → Embed a map → copy the src link." },
   { type: "number", name: "latitude", label: "Latitude (for directions)" },

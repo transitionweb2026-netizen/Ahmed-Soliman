@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/dictionary";
 import { localePath, resolveHref, tr, type Locale } from "@/lib/i18n";
+import { clinicsOf } from "@/lib/cms/clinics";
 import type { SectionContent, SiteData } from "@/lib/cms/types";
-import { Icon } from "@/components/ui/Icon";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Logo } from "./Logo";
 
@@ -20,11 +21,12 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
   const year = new Date().getFullYear();
   const { contact, settings } = site;
   const name = tr(settings.name, locale);
-  const contactRows = [
+  const { clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
+  const contactRows: Array<{ icon: IconName; label: string; href?: string; external?: boolean; ltr?: boolean }> = [
     { icon: "phone" as const, label: contact.phone, href: contact.phoneHref, ltr: true },
     { icon: "whatsapp" as const, label: dict.contactPage.whatsapp, href: whatsappHref, external: true },
     { icon: "mail" as const, label: contact.email, href: `mailto:${contact.email}`, ltr: true },
-    { icon: "pin" as const, label: tr(contact.address, locale) },
+    ...clinics.map((clinic) => ({ icon: "pin" as const, label: clinic.name ? `${clinic.name}: ${clinic.address}` : clinic.address })),
   ].filter((row) => row.label);
 
   return (
@@ -75,7 +77,7 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
                 </>
               );
               return (
-                <li key={row.icon}>
+                <li key={`${row.icon}-${row.label}`}>
                   {row.href ? (
                     <a
                       href={row.href}
@@ -85,7 +87,7 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
                       {body}
                     </a>
                   ) : (
-                    <p className="flex items-center gap-3 text-mist/70">{body}</p>
+                    <p className="flex items-start gap-3 text-mist/70">{body}</p>
                   )}
                 </li>
               );
@@ -98,11 +100,16 @@ export function Footer({ locale, dict, site, footer, whatsappHref }: FooterProps
             {dict.footer.hours}
           </h2>
           {/* Arabic desktop: a little tighter so the hours (English digits are wider) stay on one line. */}
-          <div className="glass glass-soft rounded-2xl p-5 text-sm xl:rtl:px-4">
-            <p className="flex items-center gap-3 text-mist/80 xl:rtl:gap-2">
-              <Icon name="clock" size={18} className="text-brand-light" />
-              {tr(contact.hours, locale)}
-            </p>
+          <div className="glass glass-soft grid gap-3 rounded-2xl p-5 text-sm xl:rtl:px-4">
+            {(clinics.some((clinic) => clinic.hours) ? clinics.filter((clinic) => clinic.hours) : [{ name: "", hours: hoursText }]).map((clinic, i) => (
+              <p key={i} className="flex items-start gap-3 text-mist/80 xl:rtl:gap-2">
+                <Icon name="clock" size={18} className="mt-0.5 shrink-0 text-brand-light" />
+                <span className="whitespace-pre-line">
+                  {clinic.name && <span className="block text-xs text-mist/55">{clinic.name}</span>}
+                  {clinic.hours}
+                </span>
+              </p>
+            ))}
           </div>
         </div>
       </div>

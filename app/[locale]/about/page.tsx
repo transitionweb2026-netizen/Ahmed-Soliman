@@ -7,7 +7,6 @@ import { delay } from "@/lib/motion";
 import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import {
   getAchievements,
-  getCertificates,
   getHero,
   getSection,
   getSiteData,
@@ -20,7 +19,6 @@ import type { DetailItem } from "@/content/types";
 import type { Locale } from "@/lib/i18n";
 import { DetailCard } from "@/components/cards/DetailCard";
 import { CareerTimeline } from "@/components/sections/CareerTimeline";
-import { Certificates } from "@/components/sections/Certificates";
 import { DoctorCard } from "@/components/sections/DoctorCard";
 import { CmsHero } from "@/components/sections/CmsHero";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -74,16 +72,15 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
   const t = dict.about;
   const modalLabels = { learnMore: dict.common.learnMore, close: dict.common.close, highlights: dict.services.benefits };
 
-  const [site, hero, technologies, specialties, milestones, achievements, certificates] = await Promise.all([
+  const [site, hero, technologies, specialties, milestones, achievements] = await Promise.all([
     getSiteData(),
     getHero("about"),
     getTechnologies(),
     getSpecialties(),
     getTimeline(),
     getAchievements(),
-    getCertificates(),
   ]);
-  const [videoSection, intro1, intro2, techSection, areasSection, journeySection, achievementsSection, certificatesSection, philosophy] =
+  const [videoSection, intro1, intro2, techSection, areasSection, journeySection, achievementsSection, philosophy] =
     await Promise.all(
       [
         "about.video",
@@ -93,7 +90,6 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
         "about.specialties",
         "about.journey",
         "about.achievements",
-        "about.certificates",
         "about.philosophy",
       ].map(getSection),
     );
@@ -225,29 +221,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
       </section>
       )}
 
-      {/* 7 — Certificates */}
-      {certificates.length > 0 && (
-      <section aria-labelledby="certificates-title" className="section-y relative isolate">
-        <Aurora className="-end-60 top-1/4" variant="deep" />
-        <div className="container-lux">
-          <SectionHeader
-            id="certificates-title"
-            eyebrow={tr(certificatesSection.eyebrow, locale)}
-            title={tr(certificatesSection.title, locale)}
-            subtitle={tr(certificatesSection.subtitle, locale)}
-          />
-          <div className="mt-12">
-            <Certificates
-              certificates={certificates}
-              locale={locale}
-              labels={{ heading: t.certificateHeading, view: t.viewCertificate, close: dict.common.close, name, pdf: t.openPdf }}
-            />
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* 8 — Philosophy: portrait card (start side) + personal statement (end side) */}
+      {/* 7 — Philosophy: portrait card (start side) + personal statement (end side) */}
       <section aria-labelledby="philosophy-title" className="section-y relative isolate">
         <Aurora className="-start-60 top-10" />
         <div className="container-lux grid items-center gap-16 lg:grid-cols-2 lg:gap-20">

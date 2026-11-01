@@ -32,7 +32,6 @@ const groups: Array<{ label: string; items: NavItem[] }> = [
       { href: "/admin/specialties", label: "Specialties", icon: "target" },
       { href: "/admin/timeline", label: "Career Journey", icon: "calendar" },
       { href: "/admin/achievements", label: "Achievements", icon: "award" },
-      { href: "/admin/certificates", label: "Certificates", icon: "shield" },
       { href: "/admin/videos", label: "Videos", icon: "play" },
       { href: "/admin/articles", label: "Articles", icon: "book" },
       { href: "/admin/reviews", label: "Reviews", icon: "star" },

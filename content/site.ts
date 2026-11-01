@@ -12,21 +12,21 @@ export const site = {
     ar: "استشاري جراحة العظام والمفاصل والطب الرياضي",
     en: "Consultant Orthopaedic, Joint & Sports Medicine Surgeon",
   } satisfies Localized,
-  phone: "+20 100 000 0000",
-  phoneHref: "tel:+201000000000",
-  whatsappNumber: "201000000000",
+  phone: "01557802000",
+  phoneHref: "tel:+201557802000",
+  whatsappNumber: "201557802000",
   email: "info@drahmedsoliman.com",
+  /** One clinic per line, "Clinic name: address"; the hours below follow the same order. */
   address: {
-    ar: "القاهرة، مصر — شارع التسعين، التجمع الخامس",
-    en: "90th Street, Fifth Settlement, Cairo, Egypt",
+    ar: "العيادة الرئيسية – الدقي، القاهرة: ٢٤ شارع عمر بن الخطاب، الدور العاشر، متفرع من محيي الدين أبو العز، خلف محمود الفار\nعيادة الإسكندرية: عيادات مستشفى أندلسية الشلالات، شارع السلطان حسين، أمام كلية الطب",
+    en: "Main clinic – Dokki, Cairo: 24 Omar Ibn El-Khattab St., 10th floor, off Mohy El-Din Abu El-Ezz St., behind Mahmoud El-Far\nAlexandria clinic: Andalusia Shallalat Hospital clinics, Sultan Hussein St., opposite the Faculty of Medicine",
   } satisfies Localized,
   hours: {
-    ar: "السبت – الخميس · ٤ م – ١٠ م",
-    en: "Sat – Thu · 4 PM – 10 PM",
+    ar: "الأحد والأربعاء من ٢ إلى ٤ م\nالجمعة من كل أسبوع من ٥:٣٠ إلى ٧:٣٠ م",
+    en: "Sunday & Wednesday, 2–4 PM\nEvery Friday, 5:30–7:30 PM",
   } satisfies Localized,
-  mapEmbedUrl:
-    "https://www.google.com/maps?q=90th+Street+Fifth+Settlement+Cairo&output=embed",
-  geo: { lat: 30.0205, lng: 31.4913 },
+  /** Map of the main clinic, found by its address (no exact pin yet). */
+  mapEmbedUrl: "https://www.google.com/maps?q=24+Omar+Ibn+El-Khattab+St,+Dokki,+Giza,+Egypt&output=embed",
   socials: [
     { name: "Facebook", icon: "facebook", href: "https://facebook.com/" },
     { name: "Instagram", icon: "instagram", href: "https://instagram.com/" },

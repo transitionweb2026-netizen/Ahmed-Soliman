@@ -55,8 +55,8 @@ export const defaultSite: SiteData = {
     hours: site.hours,
     bookingUrl: "",
     mapEmbedUrl: site.mapEmbedUrl,
-    latitude: site.geo.lat,
-    longitude: site.geo.lng,
+    latitude: null,
+    longitude: null,
   },
   socials: site.socials.map((s) => ({ id: s.name.toLowerCase(), platform: s.name.toLowerCase(), label: s.name, url: s.href, icon: s.icon })),
   nav: navItems.map((item) => ({ key: item.key, path: item.path, label: both((d) => d.nav[item.key]) })),
@@ -154,11 +154,6 @@ export const defaultSections: Record<string, SectionContent> = {
     subtitle: both((d) => d.about.journeySubtitle),
   }),
   "about.achievements": section({ eyebrow: both((d) => d.about.achievementsEyebrow), title: both((d) => d.about.achievementsTitle) }),
-  "about.certificates": section({
-    eyebrow: both((d) => d.about.certificatesEyebrow),
-    title: both((d) => d.about.certificatesTitle),
-    subtitle: both((d) => d.about.certificatesSubtitle),
-  }),
   "about.philosophy": section({
     eyebrow: both((d) => d.about.philosophyEyebrow),
     title: both((d) => d.about.philosophyTitle),

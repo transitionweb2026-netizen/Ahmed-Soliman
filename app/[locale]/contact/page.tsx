@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localePath, tr } from "@/lib/i18n";
 import { delay } from "@/lib/motion";
 import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { clinicsOf, mapsSearchUrl } from "@/lib/cms/clinics";
 import { getHero, getSection, getServices, getSiteData, getTreatments } from "@/lib/cms/data";
 import { whatsappLink } from "@/content/site";
 import { ContactForm } from "@/components/contact/ContactForm";
@@ -35,13 +36,27 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
     getSection("contact.form"),
   ]);
   const { contact } = site;
+  // One card per clinic (address line + its hours line), see lib/cms/clinics.ts.
+  const { clinics, hoursText } = clinicsOf(tr(contact.address, locale), tr(contact.hours, locale));
   const directions =
     contact.latitude != null && contact.longitude != null
       ? `https://www.google.com/maps/dir/?api=1&destination=${contact.latitude},${contact.longitude}`
-      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tr(contact.address, locale))}`;
+      : clinics[0]
+        ? mapsSearchUrl(clinics[0])
+        : "";
+  // An Egyptian local number (01xxxxxxxxx) is dialled from abroad as 0020 1xxxxxxxxx.
+  const phoneDigits = contact.phone.replace(/\D/g, "");
+  const abroadNumber = /^0\d{10}$/.test(phoneDigits) ? `0020${phoneDigits.slice(1)}` : "";
 
-  const channels: Array<{ icon: IconName; label: string; value: string; href?: string; external?: boolean; ltr?: boolean }> = [
-    { icon: "phone" as const, label: t.phone, value: contact.phone, href: contact.phoneHref, ltr: true },
+  const channels: Array<{ icon: IconName; label: string; value: string; note?: string; href?: string; external?: boolean; ltr?: boolean }> = [
+    {
+      icon: "phone" as const,
+      label: t.phone,
+      value: contact.phone,
+      note: abroadNumber && `${t.fromAbroad} ${abroadNumber}`,
+      href: contact.phoneHref,
+      ltr: true,
+    },
     {
       icon: "whatsapp" as const,
       label: t.whatsapp,
@@ -52,8 +67,7 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
     },
     { icon: "mail" as const, label: t.email, value: contact.email, href: `mailto:${contact.email}`, ltr: true },
     { icon: "calendar" as const, label: t.booking, value: contact.bookingUrl.replace(/^https?:\/\//, ""), href: contact.bookingUrl, external: true, ltr: true },
-    { icon: "pin" as const, label: t.address, value: tr(contact.address, locale) },
-    { icon: "clock" as const, label: t.hours, value: tr(contact.hours, locale) },
+    { icon: "clock" as const, label: t.hours, value: hoursText },
   ].filter((channel) => channel.value);
 
   const serviceOptions = [...services, ...treatments].map((s) => tr(s.title, locale));
@@ -79,9 +93,10 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
                     </span>
                     <span className="flex min-w-0 flex-col">
                       <span className="text-xs text-mist/55">{channel.label}</span>
-                      <span dir={channel.ltr ? "ltr" : undefined} className="truncate font-semibold text-white rtl:text-right">
+                      <span dir={channel.ltr ? "ltr" : undefined} className={`font-semibold text-white rtl:text-right ${channel.icon === "clock" ? "whitespace-pre-line" : "truncate"}`}>
                         {channel.value}
                       </span>
+                      {channel.note && <span className="mt-0.5 text-xs leading-relaxed text-mist/60">{channel.note}</span>}
                     </span>
                     {channel.href && (
                       <Icon name="arrow" size={18} className="ms-auto shrink-0 text-brand-light opacity-50 transition-all group-hover:opacity-100 rtl:-scale-x-100" />
@@ -104,6 +119,31 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
                   </li>
                 );
               })}
+              {clinics.map((clinic, i) => (
+                <li key={`clinic-${i}`} data-reveal="start" style={delay((channels.length + i) * 80)}>
+                  <a
+                    href={mapsSearchUrl(clinic)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group glass glass-interactive flex items-start gap-4 rounded-2xl p-4"
+                  >
+                    <span className="glass-chip h-12 w-12 shrink-0 rounded-2xl">
+                      <Icon name="pin" size={21} />
+                    </span>
+                    <span className="flex min-w-0 flex-col gap-1">
+                      <span className="text-xs text-mist/55">{clinic.name || t.address}</span>
+                      <span className="font-semibold leading-relaxed text-white">{clinic.address}</span>
+                      {clinic.hours && (
+                        <span className="flex items-center gap-1.5 text-sm text-mist/75">
+                          <Icon name="clock" size={14} className="shrink-0 text-brand-light" />
+                          {clinic.hours}
+                        </span>
+                      )}
+                    </span>
+                    <Icon name="arrow" size={18} className="ms-auto mt-1 shrink-0 text-brand-light opacity-50 transition-all group-hover:opacity-100 rtl:-scale-x-100" />
+                  </a>
+                </li>
+              ))}
             </ul>
             <GlassCard reveal="start" delay={420} className="flex flex-col gap-4 rounded-2xl p-5">
               <p className="text-xs text-mist/55">{t.social}</p>
@@ -139,6 +179,7 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full grayscale-[60%] invert-[92%] hue-rotate-[160deg] saturate-[1.4]"
               />
+              {directions && (
               <div className="absolute bottom-4 end-4">
                 <GlassButton
                   href={directions}
@@ -149,6 +190,7 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/conta
                   {t.directions}
                 </GlassButton>
               </div>
+              )}
             </div>
           </div>
         </div>

@@ -167,6 +167,7 @@ export const getHero = cache(async (page: PageKey): Promise<HeroContent> => {
   const r = data as Row;
   return {
     image: mediaUrl(media, r.image_id) ?? fallback.image,
+    mobileImage: mediaUrl(media, r.image_mobile_id) ?? undefined,
     eyebrow: loc(r, "eyebrow"),
     title: loc(r, "title"),
     subtitle: loc(r, "subtitle"),

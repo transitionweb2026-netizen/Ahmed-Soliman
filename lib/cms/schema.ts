@@ -408,6 +408,14 @@ const button = (name: string, label: string): Field[] => [
 
 export const heroFields = (page: PageKey): Field[] => [
   { type: "media", name: "image_id", label: "Background image", kind: "image", folder: `${page}/hero` },
+  {
+    type: "media",
+    name: "image_mobile_id",
+    label: "Mobile background image (phones only, optional)",
+    kind: "image",
+    folder: `${page}/hero`,
+    help: "Shown instead of the image above on phones. A portrait image (about 1080 × 1920) with the face in the upper half works best; leave empty to use the image above.",
+  },
   { type: "l10n", name: "eyebrow", label: "Caption (small label above the title)" },
   { type: "l10n", name: "title", label: "Main title", required: true },
   { type: "l10n", name: "subtitle", label: "Subtitle", multiline: true, rows: 2 },

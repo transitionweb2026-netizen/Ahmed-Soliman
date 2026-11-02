@@ -19,6 +19,8 @@ export type LinkButton = { label: Localized; href: string };
 
 export type HeroContent = {
   image: string;
+  /** Optional image for phones only; phones use `image` when it is empty. */
+  mobileImage?: string;
   eyebrow: Localized;
   title: Localized;
   subtitle: Localized;

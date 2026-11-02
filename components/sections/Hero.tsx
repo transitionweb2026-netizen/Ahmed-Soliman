@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { Dictionary } from "@/lib/dictionary";
@@ -23,6 +23,27 @@ type HeroProps = {
   breadcrumb?: { label: string; homeLabel: string; current: string };
 };
 
+const COVER_CLASS =
+  "object-cover object-center motion-safe:animate-[hero-zoom_18s_var(--ease-lux)_both] md:object-[30%_center] md:rtl:object-[70%_center]";
+
+/**
+ * Cover with a separate phone image: the browser downloads only the image for
+ * its screen size (art direction with <picture>, sizes from next/image).
+ */
+function ArtDirectedCover({ desktop, mobile }: { desktop: string; mobile: string }) {
+  const common = { alt: "", fill: true, quality: 85, sizes: "100vw" } as const;
+  const { srcSet: mobileSrcSet } = getImageProps({ ...common, src: mobile }).props;
+  const { srcSet: desktopSrcSet, ...img } = getImageProps({ ...common, src: desktop, loading: "eager", fetchPriority: "high" }).props;
+  return (
+    <picture>
+      <source media="(max-width: 767px)" srcSet={mobileSrcSet} />
+      <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- decorative cover; alt="" comes from getImageProps */}
+      <img {...img} className={COVER_CLASS} />
+    </picture>
+  );
+}
+
 /**
  * The single hero used by every page. Only the text (and optionally the cover
  * image and height) changes from page to page.
@@ -43,27 +64,29 @@ export function Hero({ locale, labels, content, socials, phone, size = "full", b
         full ? "min-h-[100svh]" : "min-h-[80svh] lg:min-h-[86svh]",
       )}
     >
-      {/* Full-bleed cover, edge to edge */}
-      <div aria-hidden="true" className="absolute inset-0 -z-30 overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent)]">
-        <Image
-          src={content.image}
-          alt=""
-          fill
-          preload
-          quality={85}
-          sizes="100vw"
-          className="object-cover object-center motion-safe:animate-[hero-zoom_18s_var(--ease-lux)_both] md:object-[30%_center] md:rtl:object-[70%_center]"
-        />
+      {/* Full-bleed cover, edge to edge. On phones it stays one screen tall (the text continues below it),
+          so the photo is not enlarged when the hero grows. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-30 overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent)] max-md:bottom-auto max-md:h-[100svh]">
+        {content.mobileImage ? (
+          <ArtDirectedCover desktop={content.image} mobile={content.mobileImage} />
+        ) : (
+          <Image src={content.image} alt="" fill preload quality={85} sizes="100vw" className={COVER_CLASS} />
+        )}
       </div>
 
-      {/* Readability + brand light: dark behind the text only, so the photo stays visible. */}
-      <div aria-hidden="true" className="absolute inset-0 -z-20 bg-ink-950/45 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] md:bg-ink-950/15" />
-      <div aria-hidden="true" className="absolute inset-0 -z-20 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] bg-linear-to-r from-ink-950/85 via-ink-900/30 to-transparent rtl:bg-linear-to-l" />
+      {/* Readability + brand light: dark behind the text only, so the photo stays visible.
+          Phones: the text sits in the lower part, so only that part is darkened. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-20 bg-linear-to-b from-transparent from-30% via-ink-950/45 to-ink-950/85 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] max-md:bottom-auto max-md:h-[100svh] md:bg-none md:bg-ink-950/15"
+      />
+      <div aria-hidden="true" className="absolute inset-0 -z-20 hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent)] bg-linear-to-r from-ink-950/85 via-ink-900/30 to-transparent md:block rtl:bg-linear-to-l" />
       <div aria-hidden="true" className="absolute -bottom-40 -start-40 -z-20 h-[36rem] w-[36rem] rounded-full bg-brand/25 blur-3xl" />
 
       <div
         className={cn(
-          "container-lux grid grid-cols-1 gap-10 pt-36 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end xl:gap-12",
+          // Phones: the text starts below the upper part of the photo, so the doctor's face stays clear.
+          "container-lux grid grid-cols-1 gap-10 pt-[40svh] md:pt-36 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end xl:gap-12",
           full ? "pb-28 lg:pb-32" : "pb-20 lg:pb-24",
         )}
       >

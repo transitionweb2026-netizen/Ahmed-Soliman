@@ -9,8 +9,8 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://drahmedsoliman.com",
   name: { ar: "د. أحمد سليمان", en: "Dr. Ahmed Soliman" } satisfies Localized,
   specialty: {
-    ar: "استشاري جراحة العظام والمفاصل والطب الرياضي",
-    en: "Consultant Orthopaedic, Joint & Sports Medicine Surgeon",
+    ar: "استشاري علاج الألم وألم العمود الفقري والمفاصل والألم المزمن والآلام السرطانية",
+    en: "Consultant in Pain Management: Spine, Joint, Chronic & Cancer Pain",
   } satisfies Localized,
   phone: "01557802000",
   phoneHref: "tel:+201557802000",

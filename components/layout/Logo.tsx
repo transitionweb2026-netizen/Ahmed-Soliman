@@ -37,7 +37,8 @@ export function Logo({ href, name, tagline, compact = false, className, onClick 
       {!compact && (
         <span className="flex flex-col leading-tight">
           <span className="font-display text-[1.05rem] font-semibold tracking-wide text-white">{name}</span>
-          {tagline && <span className="hidden text-[0.7rem] text-brand-light/80 sm:block">{tagline}</span>}
+          {/* Wraps under the name until there is room for one line, so it never squeezes the menu. */}
+          {tagline && <span className="hidden max-w-[11.5rem] text-[0.7rem] leading-snug text-brand-light/80 sm:block min-[1340px]:max-w-none">{tagline}</span>}
         </span>
       )}
     </Link>

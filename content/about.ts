@@ -162,7 +162,7 @@ export const milestones: Milestone[] = [
     id: "consultant",
     period: "2017 — 2020",
     icon: "shield",
-    role: { ar: "استشاري جراحة العظام", en: "Consultant Orthopaedic Surgeon" },
+    role: { ar: "استشاري آلام العمود الفقري وألم المفاصل والألم المزمن", en: "Consultant in Spine, Joint & Chronic Pain" },
     place: { ar: "مستشفى دار الفؤاد", en: "Dar Al Fouad Hospital" },
     text: {
       ar: "قاد برنامج تغيير المفاصل والمناظير، وأدخل تقنيات الملاحة الحاسوبية إلى القسم.",

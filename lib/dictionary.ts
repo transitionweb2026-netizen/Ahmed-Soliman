@@ -17,7 +17,7 @@ const ar = {
     primary: "التنقل الرئيسي",
   },
   hero: {
-    eyebrow: "استشاري جراحة العظام والطب الرياضي",
+    eyebrow: "استشاري آلام العمود الفقري وألم المفاصل والألم المزمن",
     line1: "د. أحمد سليمان",
     line2: "دقة جراحية تعيد لك حرية الحركة",
     book: "احجز استشارتك",
@@ -34,12 +34,12 @@ const ar = {
     eyebrow: "تعرّف على الطبيب",
     title: "خبرة عالمية بلمسة إنسانية",
     body: [
-      "د. أحمد سليمان استشاري جراحة العظام والمفاصل والطب الرياضي، حاصل على الزمالة البريطانية وتدرب في كبرى المراكز الأوروبية على أحدث تقنيات المناظير وتغيير المفاصل.",
+      "د. أحمد سليمان استشاري آلام العمود الفقري وألم المفاصل والألم المزمن، حاصل على الزمالة البريطانية وتدرب في كبرى المراكز الأوروبية على أحدث تقنيات المناظير وتغيير المفاصل.",
       "يؤمن بأن كل مريض قصة مختلفة؛ لذلك يبدأ دائمًا بالاستماع والتشخيص الدقيق، ثم يضع خطة علاجية مخصصة تجمع بين الطب المبني على الدليل وأقل تدخل جراحي ممكن.",
     ],
     highlights: ["الزمالة البريطانية لجراحة العظام", "أكثر من 5000 عملية ناجحة", "عضو الجمعية الأوروبية للطب الرياضي"],
     cta: "اقرأ السيرة الكاملة",
-    cardRole: "استشاري جراحة العظام",
+    cardRole: "استشاري آلام العمود الفقري وألم المفاصل والألم المزمن",
   },
   video: {
     eyebrow: "داخل العيادة",
@@ -99,7 +99,7 @@ const ar = {
     whatsappMessage: "مرحبًا د. أحمد، أود حجز استشارة.",
   },
   footer: {
-    about: "رعاية متخصصة في جراحة العظام والمفاصل والطب الرياضي، بمعايير عالمية ولمسة إنسانية.",
+    about: "رعاية متخصصة في علاج آلام العمود الفقري والمفاصل والألم المزمن، بمعايير عالمية ولمسة إنسانية.",
     pages: "الصفحات",
     contact: "التواصل",
     hours: "مواعيد العيادة",
@@ -117,7 +117,7 @@ const ar = {
     introBlocks: [
       {
         title: "من هو د. أحمد سليمان؟",
-        text: "استشاري جراحة العظام والمفاصل والطب الرياضي، حاصل على الزمالة البريطانية وتدرب في كبرى المراكز الأوروبية. يجمع بين خبرة جراحية دولية وقرب إنساني من مرضاه.",
+        text: "استشاري آلام العمود الفقري وألم المفاصل والألم المزمن، حاصل على الزمالة البريطانية وتدرب في كبرى المراكز الأوروبية. يجمع بين خبرة جراحية دولية وقرب إنساني من مرضاه.",
       },
       {
         title: "رسالته",
@@ -223,7 +223,7 @@ const en: Dictionary = {
     primary: "Primary navigation",
   },
   hero: {
-    eyebrow: "Consultant Orthopaedic & Sports Medicine Surgeon",
+    eyebrow: "Consultant in Spine, Joint & Chronic Pain",
     line1: "Dr. Ahmed Soliman",
     line2: "Surgical precision that restores your freedom of movement",
     book: "Book a consultation",
@@ -240,12 +240,12 @@ const en: Dictionary = {
     eyebrow: "Meet the doctor",
     title: "World-class expertise with a human touch",
     body: [
-      "Dr. Ahmed Soliman is a consultant orthopaedic, joint and sports medicine surgeon. He holds the UK Fellowship and trained at leading European centres in advanced arthroscopy and joint replacement.",
+      "Dr. Ahmed Soliman is a consultant in spine, joint and chronic pain. He holds the UK Fellowship and trained at leading European centres in advanced arthroscopy and joint replacement.",
       "He believes every patient is a different story — so every plan starts with listening and precise diagnosis, followed by a personalised treatment that combines evidence-based medicine with the least invasive option possible.",
     ],
     highlights: ["UK Fellowship in Orthopaedic Surgery", "5,000+ successful procedures", "Member, European Society of Sports Medicine"],
     cta: "Read the full biography",
-    cardRole: "Consultant Orthopaedic Surgeon",
+    cardRole: "Consultant in Spine, Joint & Chronic Pain",
   },
   video: {
     eyebrow: "Inside the clinic",
@@ -305,7 +305,7 @@ const en: Dictionary = {
     whatsappMessage: "Hello Dr. Ahmed, I would like to book a consultation.",
   },
   footer: {
-    about: "Specialist care in orthopaedic, joint and sports medicine surgery — international standards with a human touch.",
+    about: "Specialist care for spine, joint and chronic pain — international standards with a human touch.",
     pages: "Pages",
     contact: "Contact",
     hours: "Clinic hours",
@@ -323,7 +323,7 @@ const en: Dictionary = {
     introBlocks: [
       {
         title: "Who is Dr. Ahmed Soliman?",
-        text: "A consultant orthopaedic, joint and sports medicine surgeon who holds the UK Fellowship and trained at leading European centres. He combines international surgical expertise with a genuinely personal approach to every patient.",
+        text: "A consultant in spine, joint and chronic pain who holds the UK Fellowship and trained at leading European centres. He combines international surgical expertise with a genuinely personal approach to every patient.",
       },
       {
         title: "His mission",

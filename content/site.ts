@@ -30,7 +30,7 @@ export const site = {
   socials: [
     { name: "Facebook", icon: "facebook", href: "https://www.facebook.com/share/1GowFVV6tb/" },
     { name: "Instagram", icon: "instagram", href: "https://www.instagram.com/aspaincarecenter" },
-    { name: "YouTube", icon: "youtube", href: "https://youtube.com/" },
+    { name: "YouTube", icon: "youtube", href: "https://www.youtube.com/@dr.ahmedsolimanpain" },
     { name: "TikTok", icon: "tiktok", href: "https://www.tiktok.com/@aspaincarecenter" },
   ] satisfies Array<{ name: string; icon: IconName; href: string }>,
 };

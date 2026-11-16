@@ -164,7 +164,8 @@ export default async function ServicesPage({ params }: PageProps<"/[locale]/serv
                             alt={title}
                             fill
                             sizes="(min-width: 768px) 600px, 92vw"
-                            className="object-cover transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
+                            // Anchored to the top so heads are never cut; any crop comes from the bottom, behind the title.
+                            className="object-cover object-top origin-top transition-transform duration-[1.4s] ease-(--ease-lux) group-hover:scale-[1.05]"
                           />
                         )}
                         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink-900 via-ink-900/20 to-transparent" />
